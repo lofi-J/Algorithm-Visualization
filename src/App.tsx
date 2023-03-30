@@ -1,4 +1,7 @@
 import { createGlobalStyle } from "styled-components";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Infomation from "./pages/Infomation";
+import Home from "./pages/Home";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -54,15 +57,22 @@ body {
   background-color: black;
   color: white;
 }
+a {
+  text-decoration: none;
+  color: white;
+}
 `
-
 function App() {
   return (
     <>
-    <GlobalStyle />
-    <h1>Hello New Project</h1>
+      <BrowserRouter>
+        <GlobalStyle />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="infomation" element={<Infomation />}/>
+        </Routes>
+      </BrowserRouter>
     </>
-    
   );
 }
 
