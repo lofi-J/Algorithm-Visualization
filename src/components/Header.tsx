@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeOff, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
 import { DarkModeToggle, Mode } from "@anatoliygatt/dark-mode-toggle";
+import { useSetRecoilState } from "recoil";
+import { isDark } from "../state-management/atom";
 
 
 const StyledHeaderContainer = styled.header`
@@ -17,8 +19,9 @@ const StyledHeaderInner = styled.div<PropsType>`
     display: flex;
     flex-direction: row;
     h1 {
+        font-family: 'Noto Sans KR', sans-serif;
+        font-family: 'Noto Serif', serif;
         position: relative;
-        font-size: x-large; 
         &:hover {
             ::after{opacity: 1}
         }
@@ -29,7 +32,7 @@ const StyledHeaderInner = styled.div<PropsType>`
         margin-top: .3rem;
         width: 100%;
         height: 2px;
-        background-color: #ffffff;
+        background-color: ${props => props.theme.color};
         opacity: ${props => props.path === '/' ? 1 : 0}
     }
     span {
@@ -44,7 +47,7 @@ const StyledHeaderInner = styled.div<PropsType>`
         margin-top: .3rem;
         width: 100%;
         height: 2px;
-        background-color: #ffffff;
+        background-color: ${props => props.theme.color};
         opacity: ${props => props.path === '/' ? 0 : 1};
     }
     .infomation {
@@ -53,22 +56,15 @@ const StyledHeaderInner = styled.div<PropsType>`
         }
     }
 `
-const StyledSetting = styled.div`
-    display: flex;
-`
-
 
 interface PropsType {
     path: string
 }
 
 const Header = (props: PropsType) => {
-    const [isMute, setIsMute] = useState(true);
     const [mode, setMode] = useState<Mode | undefined>('dark');
+    const setRecoilFn: (mode: boolean) => void = useSetRecoilState(isDark);
 
-    const onClick = () => {
-        setIsMute((current) => !current);
-    }
     return(
         <StyledHeaderContainer>
             <StyledHeaderInner path={props.path}>
@@ -77,26 +73,24 @@ const Header = (props: PropsType) => {
                 <Link to={"/infomation"}><span className="infomation">Infomation</span></Link>
             </StyledHeaderInner>
 
-            <StyledSetting>
-                <DarkModeToggle
-                mode={mode}
-                dark="Dark"
-                light="Light"
-                size="sm"
-                inactiveTrackColor="#ffffff"
-                inactiveTrackColorOnHover="#ffffff"
-                inactiveTrackColorOnActive="#ffffff"
-                activeTrackColor="#000000"
-                activeTrackColorOnHover="#000000"
-                activeTrackColorOnActive="#000000"
-                inactiveThumbColor="#000000"
-                activeThumbColor="#ffffff"
-                onChange={(mode) => {
-                  setMode(mode);
-                  console.log(mode);
-                }}
-                />
-            </StyledSetting>
+            <DarkModeToggle
+            mode={mode}
+            dark="Dark"
+            light="Light"
+            size="sm"
+            inactiveTrackColor="#ffffff"
+            inactiveTrackColorOnHover="#ffffff"
+            inactiveTrackColorOnActive="#ffffff"
+            activeTrackColor="#000000"
+            activeTrackColorOnHover="#000000"
+            activeTrackColorOnActive="#000000"
+            inactiveThumbColor="#000000"
+            activeThumbColor="#ffffff"
+            onChange={(mode) => {
+                setMode(mode);
+                if(mode === 'dark') { setRecoilFn(true) }
+                else { setRecoilFn(false) }
+            }}/>
         </StyledHeaderContainer>
     );
 }

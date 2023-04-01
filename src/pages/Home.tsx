@@ -1,25 +1,31 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
+import Card from "../components/Card";
 
 
-const StyledHome = styled.div`
-    background-color: gray;
-    padding: 0 100px;
-
-    .grid-container {
-        background-color: aqua;
-
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: repeat(2, minmax(200px, auto));
-        grid-gap: 10px;
-        
+const StyledHome = styled.main`
+    .flex-container {
+        display: flex; 
+        box-sizing: border-box;
+        flex-direction: column;
         text-align: center;
-        align-items: stretch;
-    }
-    span{
-        background-color: blue;
+        margin: 0 80px;
+        padding: 0 64px;
+
+        //flex 윗 줄
+        .flex-top {
+            display: flex;
+            flex-direction: row;
+            box-sizing: border-box;
+        }
+        //flex 아랫 줄
+        .flex-bottom {
+            display: flex;
+            flex-direction: row;
+            box-sizing: border-box;
+            margin-top: 26px;
+        }
     }
 `
 
@@ -29,15 +35,19 @@ const Home = () => {
         <>
             <Header path={location.pathname}/>
             <StyledHome>
-                <div className="grid-container">
-                    <span>1</span>
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span>5</span>
-                    <span>6</span>
-                    <span>7</span>
-                    <span>8</span>
+                <div className="flex-container">
+                    <div className="flex-top">
+                        <Card title={'Bubble sort'} timeComplex={'O(n\u00B2)'}/>
+                        <Card title={'Selection sort'} timeComplex={'O(n\u00B2)'}/>
+                        <Card title={'Insertion sort'} timeComplex={'O(n\u00B2)'}/>
+                        <Card title={'Merge sort'} timeComplex={'O(nlogn)'}/>
+                    </div>
+                    <div className="flex-bottom">
+                        <Card title={'Heap sort'} timeComplex={'O(nlogn)'}/>
+                        <Card title={'Quick sort'} timeComplex={'O(nlogn)'}/>
+                        <Card title={'Radix sort'} timeComplex={'O(n2)'}/>
+                        <Card title={'Shell sort'} timeComplex={'Depends on gap sequence'}/>
+                    </div>
                 </div>
             </StyledHome>
         </>

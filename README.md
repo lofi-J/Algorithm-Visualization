@@ -12,6 +12,7 @@ HTML Canvas를 이용한 기초적인 정렬알고리즘들의 시각화작업�
  - React-Router v6
  - tone.js
  - three.js
+ - recoil v0.7.7
 
 ## Language
  - TypeScript
