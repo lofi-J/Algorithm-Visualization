@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { CardProp } from "../type-info/type-interface";
 import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { algorithms } from "../state-management/sort-algorithms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { showDetail } from "../state-management/atom";
@@ -16,14 +16,16 @@ const StyledCard = styled.article`
     width: 288px;
     height: 300px;
     padding: 0 36px;
+    
     .content-container {
-        
+        /* border: 1px solid white;
+        border-radius: 2px; */
         canvas {
             width: 100%;    
         }
 
         &:hover {
-            background: red;
+            background: gray;
         }
     }
 `
@@ -50,22 +52,25 @@ const Card = (props: CardProp) => {
     const path = `detail/${props.data.name.replace(' sort', '')}`;  
 
     // Click Detail Card
-    
     const setShowDetail = useSetRecoilState(showDetail);
-    const onClick = () => {
-    //카드를 클릭하면 detail 렌더 유무를 결정하는 전역state변수를 true로 초기화
-        setShowDetail(true);
-    }
+    const currPath = useLocation().pathname;
+    const isDetailNow = currPath.includes('/detail')
+    
+    useEffect(() => {
+        if(isDetailNow) {
+            setShowDetail(true);
+        }
+    }, [])
 
     return(
-        <StyledCard onClick={onClick}>
-            <Link to={path+props.index}>
-                <div className="content-container">
-                    <h3>{props.data.name}</h3>
-                    <canvas ref={canvasRef}></canvas>
-                    <span>detail</span>
-                </div>
-            </Link>
+        <StyledCard onClick={props.onClick}>
+            
+            <div className="content-container">
+                <h3>{props.data.name}</h3>
+                <canvas ref={canvasRef}></canvas>
+                <span>detail</span>
+            </div>
+            
         </StyledCard>
     );
 }

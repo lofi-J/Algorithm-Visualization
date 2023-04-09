@@ -5,8 +5,8 @@ import Home from "./pages/Home"
 import { useRecoilValue } from "recoil";
 import { isDark } from "./state-management/atom";
 import { darkMode, lightMode } from "./style/theme";
-import Detail from "./components/Detail";
-import NotFound from "./pages/NotFound";
+
+
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -79,14 +79,7 @@ a {
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
-    children: [
-      {
-        path: 'detail/:sort',
-        element: <Detail />
-      }
-    ]
-    ,errorElement: <NotFound />
+    element: <Home />
   },
   {
     path: '/infomation',

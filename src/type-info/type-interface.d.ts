@@ -4,6 +4,7 @@ export interface HeaderProp {
 }
 
 export interface CardProp {
+    onClick: () => void;
     index: number;
     data: {
         name: string;
@@ -14,6 +15,9 @@ export interface CardProp {
 declare module "styled-components" {
     export interface DefaultTheme {
         bgColor: string;
+        oppositeBgColor: string;
         color: string;
+        oppositeColor: string;
     }
 }
+

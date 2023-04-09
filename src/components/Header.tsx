@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { DarkModeToggle, Mode } from "@anatoliygatt/dark-mode-toggle";
-import { useSetRecoilState } from "recoil";
-import { isDark } from "../state-management/atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isDark, isInfomation } from "../state-management/atom";
+import { useLocation } from "react-router-dom";
+import path from "path";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faVolumeOff, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
 
@@ -48,7 +50,7 @@ const StyledHeaderInner = styled.div<PropsType>`
         width: 100%;
         height: 2px;
         background-color: ${props => props.theme.color};
-        opacity: ${props => props.path === '/' ? 0 : 1};
+        opacity: ${props => props.path === '/infomation' ? 1 : 0};
     }
     .infomation {
         &:hover {
@@ -64,7 +66,7 @@ interface PropsType {
 const Header = (props: PropsType) => {
     const [mode, setMode] = useState<Mode | undefined>('dark');
     const setRecoilFn: (mode: boolean) => void = useSetRecoilState(isDark);
-
+    
     return(
         <StyledHeaderContainer>
             <StyledHeaderInner path={props.path}>
