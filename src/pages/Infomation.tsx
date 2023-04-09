@@ -5,7 +5,6 @@ import Header from "../components/Header";
 
 const StyledInfomation = styled.div`
     padding: 0 100px;
-    background-color: gray;
 `
 
 const Infomation = () => {

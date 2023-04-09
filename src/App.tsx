@@ -1,10 +1,12 @@
 import { ThemeProvider, createGlobalStyle } from "styled-components";
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Infomation from "./pages/Infomation";
-import Home from "./pages/Home";
+import Home from "./pages/Home"
 import { useRecoilValue } from "recoil";
 import { isDark } from "./state-management/atom";
 import { darkMode, lightMode } from "./style/theme";
+import Detail from "./components/Detail";
+import NotFound from "./pages/NotFound";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -73,21 +75,34 @@ a {
   color: ${props => props.theme.color};
 }
 `
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Home />,
+    children: [
+      {
+        path: 'detail/:sort',
+        element: <Detail />
+      }
+    ]
+    ,errorElement: <NotFound />
+  },
+  {
+    path: '/infomation',
+    element: <Infomation />
+  },
+])
+
 function App() {
   const isDarkTheme = useRecoilValue(isDark);
   return (
     <>
-      <BrowserRouter>
         <ThemeProvider theme={isDarkTheme ? darkMode : lightMode}>
           <GlobalStyle />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="infomation" element={<Infomation />}/>
-          </Routes>
+          <RouterProvider router={router} />
         </ThemeProvider>
-      </BrowserRouter>
     </>
-  );
+  );                
 }
-
 export default App;

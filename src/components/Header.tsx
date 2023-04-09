@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faVolumeOff, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
 import { DarkModeToggle, Mode } from "@anatoliygatt/dark-mode-toggle";
 import { useSetRecoilState } from "recoil";
 import { isDark } from "../state-management/atom";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faVolumeOff, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
 
 
 const StyledHeaderContainer = styled.header`

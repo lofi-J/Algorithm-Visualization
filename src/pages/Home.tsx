@@ -1,7 +1,14 @@
-import { useLocation } from "react-router-dom";
+import { Outlet, Route, Routes, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
-import Card from "../components/Card";
+import { algorithms } from "../state-management/sort-algorithms";
+import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { showDetail } from "../state-management/atom";
+import Card from "../components/Card"
+
+
+
 
 
 const StyledHome = styled.main`
@@ -13,40 +20,70 @@ const StyledHome = styled.main`
         margin: 0 80px;
         padding: 0 64px;
 
-        //flex 윗 줄
-        .flex-top {
+        //level1 윗 줄
+        .card-container {
             display: flex;
             flex-direction: row;
+            justify-content: space-around;
             box-sizing: border-box;
-        }
-        //flex 아랫 줄
-        .flex-bottom {
-            display: flex;
-            flex-direction: row;
-            box-sizing: border-box;
-            margin-top: 26px;
         }
     }
 `
 
 const Home = () => {
     const location = useLocation();
+    
+    const level1 = algorithms.slice(0, 3);
+    const level2 = algorithms.slice(3, 6);
+    const level3 = algorithms.slice(6, 9);
+
+    //atom 
+    const isShowDetail = useRecoilValue(showDetail);
+
     return (
         <>
             <Header path={location.pathname}/>
+
+            {
+                isShowDetail ? <Outlet /> : null
+            }
+            
             <StyledHome>
                 <div className="flex-container">
-                    <div className="flex-top">
-                        <Card title={'Bubble sort'} timeComplex={'O(n\u00B2)'}/>
-                        <Card title={'Selection sort'} timeComplex={'O(n\u00B2)'}/>
-                        <Card title={'Insertion sort'} timeComplex={'O(n\u00B2)'}/>
-                        <Card title={'Merge sort'} timeComplex={'O(nlogn)'}/>
+                    <div className="level1 card-container">
+                        {
+                            level1.map((algorithm)=>(
+                                <Card
+                                index={algorithm.index}
+                                key={algorithm.name}
+                                data={algorithm}
+                                />
+                            ))
+                        }
                     </div>
-                    <div className="flex-bottom">
-                        <Card title={'Heap sort'} timeComplex={'O(nlogn)'}/>
-                        <Card title={'Quick sort'} timeComplex={'O(nlogn)'}/>
-                        <Card title={'Radix sort'} timeComplex={'O(n2)'}/>
-                        <Card title={'Shell sort'} timeComplex={'Depends on gap sequence'}/>
+
+                    <div className="level2 card-container">
+                        {
+                            level2.map((algorithm)=>(
+                                <Card 
+                                index={algorithm.index}
+                                key={algorithm.name}
+                                data={algorithm}
+                                />
+                            ))
+                        }
+                    </div>
+
+                    <div className="level3 card-container">
+                        {
+                            level3.map((algorithm)=>(
+                                <Card 
+                                index={algorithm.index}
+                                key={algorithm.name}
+                                data={algorithm}                               
+                                />
+                            ))
+                        }
                     </div>
                 </div>
             </StyledHome>

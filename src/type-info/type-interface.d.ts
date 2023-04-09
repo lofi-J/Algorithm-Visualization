@@ -4,10 +4,12 @@ export interface HeaderProp {
 }
 
 export interface CardProp {
-    title: string;
-    timeComplex: string;
+    index: number;
+    data: {
+        name: string;
+        timeComplex: string;
+    }
 }
-
 
 declare module "styled-components" {
     export interface DefaultTheme {

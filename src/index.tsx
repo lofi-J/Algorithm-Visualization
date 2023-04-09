@@ -9,7 +9,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <RecoilRoot>
-    {/* <Test /> */}
     <App />
   </RecoilRoot>
 );
