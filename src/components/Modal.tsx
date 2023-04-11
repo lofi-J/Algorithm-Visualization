@@ -1,14 +1,15 @@
 import { useRecoilValue } from "recoil";
 import { getAlgorithms } from "../state-management/sort-algorithms"
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
+import Visualization from "./Visualization";
+import { useEffect } from "react";
 
 const ModalContainer = styled.div`
-    position: absolute;
-    top: 10%;
-    left: auto;
-    width: 100%;
-    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,45 +17,46 @@ const ModalContainer = styled.div`
 
 //실질적 모달창
 const DialogBox = styled.dialog`
-  width: 60%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: none;
-  border-radius: 4px;
-  box-shadow: 0 0 20px ${props => props.theme.oppositeBgColor};
-  box-sizing: border-box;
-  background-color: ${props => props.theme.bgColor};
-  z-index: 10000;
+    position: relative;
+    width: 65%;
+    max-height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 0 20px ${props => props.theme.oppositeBgColor};
+    box-sizing: border-box;
+    color: ${props => props.theme.color};
+    background-color: ${props => props.theme.bgColor};
+    z-index: 10000;
+    overflow-y: auto;
 `;
 
 const Backdrop = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  z-index: 9999;
-  /* background-color: rgba(0, 0, 0, 0.2); */
-  background-color: rgba(0, 0, 0, 0.5);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.5);
 `;
 
 interface ModalType {
-    onClickToggleModal: () => void;
+    onClickToggleModal: (index?: number) => void;
 }
 
 const Modal = ({onClickToggleModal} : ModalType) => {
+    // 모달 창이 나타나면 화면을 위로 스크롤함 
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [])
 
-    //알고리즘 정보를 담고 있는 배열에 접근
-    const algorithms = useRecoilValue(getAlgorithms);
-    //url에 담겨있는 index를 이용해 현재 보여줘야할 객체를 타겟팅함
-    const urldata = useLocation().pathname;
-    const index = Number(urldata[urldata.length-1]); //현재 보여줄 정렬알고리즘이 담겨있는 index번호이다.
-
-    
     return (
         <ModalContainer>
-            <DialogBox>hello world</DialogBox>
+            <DialogBox>
+                <Visualization />
+            </DialogBox>
             <Backdrop
                 onClick={(e: React.MouseEvent) => {
                     e.preventDefault();

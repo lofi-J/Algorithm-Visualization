@@ -1,12 +1,12 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
 import { algorithms } from "../state-management/sort-algorithms";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { showDetail } from "../state-management/atom";
+import { useSetRecoilState } from "recoil";
+import { currentSort } from "../state-management/atom";
 import Card from "../components/Card"
-import { useCallback, useState } from "react";
-import Detail from "../components/Modal";
+import { useEffect, useState } from "react";
+import Modal from "../components/Modal";
 
 
 const StyledHome = styled.main`
@@ -30,18 +30,24 @@ const StyledHome = styled.main`
 
 const Home = () => {
     const location = useLocation();
+    // currentSort atom 
+    const setCurrentSort = useSetRecoilState(currentSort);
     
     const level1 = algorithms.slice(0, 3);
     const level2 = algorithms.slice(3, 6);
     const level3 = algorithms.slice(6, 9);
 
-    //modal state hook 
+    // modal state hook 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     // toggle modal state
-    const onClickToggleModal = useCallback(() => {
-        console.log('onClickToggleModal!!!');
-        setIsOpen(!isOpen);
-      }, [isOpen]);
+    const onClickToggleModal = (index: number) => {
+        setIsOpen(!isOpen); //modal open
+        setCurrentSort(index);
+    }
+    // about scroll
+    useEffect(() => {
+        document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+    }, [isOpen])
 
     return (
         <div>
@@ -49,7 +55,7 @@ const Home = () => {
 
             {/* modal(Detail.tsx) */}
             {
-                isOpen && <Detail onClickToggleModal={onClickToggleModal} />
+                isOpen && <Modal onClickToggleModal={() => {onClickToggleModal(0)}} />
             }
 
             {/*      3 * 3 형태의 flex디자인을 위해 3개씩 3번 map()를 이용했음      */}
@@ -59,7 +65,7 @@ const Home = () => {
                         {
                             level1.map((algorithm)=>(
                                 <Card
-                                onClick={onClickToggleModal}
+                                onClick={() => {onClickToggleModal(algorithm.index)}}
                                 index={algorithm.index}
                                 key={algorithm.name}
                                 data={algorithm}
@@ -72,7 +78,7 @@ const Home = () => {
                         {
                             level2.map((algorithm)=>(
                                 <Card 
-                                onClick={onClickToggleModal}
+                                onClick={() => {onClickToggleModal(algorithm.index)}}
                                 index={algorithm.index}
                                 key={algorithm.name}
                                 data={algorithm}
@@ -85,7 +91,7 @@ const Home = () => {
                         {
                             level3.map((algorithm)=>(
                                 <Card 
-                                onClick={onClickToggleModal}
+                                onClick={() => {onClickToggleModal(algorithm.index)}}
                                 index={algorithm.index}
                                 key={algorithm.name}
                                 data={algorithm}                               

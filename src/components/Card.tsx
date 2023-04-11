@@ -64,13 +64,11 @@ const Card = (props: CardProp) => {
 
     return(
         <StyledCard onClick={props.onClick}>
-            
             <div className="content-container">
                 <h3>{props.data.name}</h3>
                 <canvas ref={canvasRef}></canvas>
                 <span>detail</span>
             </div>
-            
         </StyledCard>
     );
 }
