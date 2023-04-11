@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { useRecoilValue } from "recoil";
 import { currentSort } from "../state-management/atom";
 import { getAlgorithms } from "../state-management/sort-algorithms";
+import Canvas from "./Canvas";
 
 
 // 부모 컴포넌트
@@ -64,14 +65,15 @@ const Visualization = () => {
     // 알고리즘 정보를 담고 있는 배열에 접근
     const algorithms = useRecoilValue(getAlgorithms);
     const index = useRecoilValue(currentSort);
-    // Canvas 참조
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-
+    
+    
+    
     return (
         <StyledVisualization>
             {/* canvas와 닫기 창 */}
             <StyledCanvasContainer>
-                <canvas ref={canvasRef}></canvas>
+                {/* Canvas컴포넌트는 따로 구분했음(로직을 따로 분리하기위해) */}
+                <Canvas />
             </StyledCanvasContainer>
 
             {/* 설명칸과 시간복잡도 테이블 */}
