@@ -16,15 +16,6 @@ const StyledVisualization = styled.div`
 // 캔버스 컨테이너
 const StyledCanvasContainer = styled.div`
     display: block;
-    width: 100%;
-    height: 50%;
-    background-color: tomato;
-    
-    /* canvas */
-    canvas {
-        width: 100%;
-        height: 100%;
-    }
 `
 
 // 설명 및 시간 복잡도 컨테이너

@@ -38,7 +38,7 @@ const Home = () => {
     const level3 = algorithms.slice(6, 9);
 
     // modal state hook 
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true);
     // toggle modal state
     const onClickToggleModal = (index: number) => {
         setIsOpen(!isOpen); //modal open

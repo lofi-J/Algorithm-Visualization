@@ -2,7 +2,7 @@ import { atom, selector } from "recoil";
 
 
 // 배열 생성
-const array: number[] = [];
+export const array: number[] = [];
 
 // 무작위로 섞는 함수(Math.random())
 const shuffle = (array: number[]) => {
@@ -11,8 +11,8 @@ const shuffle = (array: number[]) => {
 // 무작위로 섞인 number들을 배열에 할당하는 함수
 // count :: 생성할 배열의 길이
 const makeRandomArray = (count: number) => {
-    for(let i = 0; i < count; i++) {
-        array.push(i);
+    for(let i = 1; i <= count; i++) {
+        array.push(i / 2);
     }
     shuffle(array);
 }
