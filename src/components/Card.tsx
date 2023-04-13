@@ -1,10 +1,9 @@
 import styled from "styled-components";
 import { CardProp } from "../type-info/type-interface";
 import { useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { algorithms } from "../state-management/sort-algorithms";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { showDetail } from "../state-management/atom";
+import { useLocation } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { isModalOpen } from "../state-management/atom";
 
 
 
@@ -49,16 +48,16 @@ const Card = (props: CardProp) => {
     }
     }, [])
     
-    const path = `detail/${props.data.name.replace(' sort', '')}`;  
+    // const path = `detail/${props.data.name.replace(' sort', '')}`;  
 
-    // Click Detail Card
-    const setShowDetail = useSetRecoilState(showDetail);
+    // Click Card
+    const setIsOpen = useSetRecoilState(isModalOpen);
     const currPath = useLocation().pathname;
     const isDetailNow = currPath.includes('/detail')
     
     useEffect(() => {
         if(isDetailNow) {
-            setShowDetail(true);
+            setIsOpen(true);
         }
     }, [])
 

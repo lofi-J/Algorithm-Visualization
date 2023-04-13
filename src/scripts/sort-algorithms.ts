@@ -1,86 +1,5 @@
 import { atom, selector } from "recoil";
 
-
-// 배열 생성
-export const array: number[] = [];
-
-// 무작위로 섞는 함수(Math.random())
-const shuffle = (array: number[]) => {
-    array.sort(() => Math.random() - 0.5);
-}
-// 무작위로 섞인 number들을 배열에 할당하는 함수
-// count :: 생성할 배열의 길이
-const makeRandomArray = (count: number) => {
-    for(let i = 1; i <= count; i++) {
-        array.push(i / 2);
-    }
-    shuffle(array);
-}
-
-//무작위 배열 생성
-makeRandomArray(100);
-
-//1
-const bubble = (arr: number[]) => {
-    for(let i = 0; i < arr.length; i++) {
-        for(let j = 0; j < arr.length-i-1; j++) {
-            if(arr[j] > arr[j+1]) {
-                const temp = arr[j];
-                arr[j] = arr[j+1];
-                arr[j+1] = temp;
-            }
-        }
-    }
-}
-
-//2
-const selection = (arr: number[]) => {
-    for(let i = 0; i < arr.length; i++) {
-        let min = i;
-        for(let j = i + 1; j < arr.length; j++) {
-            if(arr[min] > arr[j]) {
-                min = j;
-            }
-        }
-        if(i != min) {
-            [arr[i], arr[min]] = [arr[min], arr[i]];
-        }
-    }
-}
-
-// function insertionSort(arr, n)
-// {
-//     let i, key, j;
-//     for (i = 1; i < n; i++)
-//     {
-//         key = arr[i];
-//         j = i - 1;
-
-//         while (j >= 0 && arr[j] > key)
-//         {
-//             arr[j + 1] = arr[j];
-//             j = j - 1;
-//         }
-//         arr[j + 1] = key;
-//     }
-// }
-
-//3
-const insertion = (arr: number[]) =>{
-    let i, j, key;
-    for(let i = 1; i < arr.length; i++) {
-        key = arr[i];
-        j = i - 1;
-        while(j >= 0 && arr[j] > key)
-        {
-            arr[j+1] = arr[j];
-            j = j-1;
-        } 
-        arr[j+1] = key;
-    }
-}
-
-
 //4
 const merge = () => {
     console.log('4()');
@@ -192,17 +111,17 @@ const countingInfo = [
 ]
 
 export const algorithms = [
-    { name: 'Bubble sort', timeComplex: 'O(n\u00B2)', info: bubbleInfo, index: 0, func: () => {bubble(array)} },
-    { name: 'Selection sort', timeComplex: 'O(n\u00B2)', info: selectionInfo, index:1, func: () => {selection(array)}},
-    { name: 'Insertion sort', timeComplex: 'O(n\u00B2)', info: insertionInfo, index:2, func: () => {insertion(array)}},
+    { name: 'Bubble sort', timeComplex: 'O(n\u00B2)', info: bubbleInfo, index: 0},
+    { name: 'Selection sort', timeComplex: 'O(n\u00B2)', info: selectionInfo, index:1},
+    { name: 'Insertion sort', timeComplex: 'O(n\u00B2)', info: insertionInfo, index:2},
 
-    { name: 'Merge sort', timeComplex: 'O(n x logn)', info: mergeInfo, index: 3, func: () => {merge()}},
-    { name: 'Heap sort', timeComplex: 'O(n x logn)', info: heapInfo, index: 4, func: () => {heap()}},
-    { name: 'Quick sort', timeComplex: 'O(n x logn)', info: quickInfo, index: 5, func: () => {quick()}},
+    { name: 'Merge sort', timeComplex: 'O(n x logn)', info: mergeInfo, index: 3},
+    { name: 'Heap sort', timeComplex: 'O(n x logn)', info: heapInfo, index: 4},
+    { name: 'Quick sort', timeComplex: 'O(n x logn)', info: quickInfo, index: 5},
 
-    { name: 'Radix sort', timeComplex: 'O(kn)', info: radixInfo, index: 6, func: () => {radix()}},
-    { name: 'Shell sort', timeComplex: 'Depends on gap sequence', info: shellInfo, index:7, func: () => {shell()}},
-    { name: 'Counting sort', timeComplex: 'O(n+k)', info: countingInfo, index:8, func: () => {counting()}},
+    { name: 'Radix sort', timeComplex: 'O(kn)', info: radixInfo, index: 6},
+    { name: 'Shell sort', timeComplex: 'Depends on gap sequence', info: shellInfo, index:7},
+    { name: 'Counting sort', timeComplex: 'O(n+k)', info: countingInfo, index:8},
 ]
 const algorithmsState = atom({
     key: 'algorithms',
@@ -212,17 +131,3 @@ export const getAlgorithms = selector({
     key: 'getAlgorithms',
     get: ({get}) => { return get(algorithmsState) }
 })
-
-
-// 정렬함수 테스트 함수
-function testFn(fn: (arr: number[]) => void) {
-    // 배열을 다시 섞는다
-    shuffle(array);
-    console.log(`=== ${fn.name} 실행전 ===`);
-    console.log(array);
-    fn(array);
-    console.log(`=== ${fn.name} 실행후 ===`);
-    console.log(array);
-}
-
-// testFn(insertion);

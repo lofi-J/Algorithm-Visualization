@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
-import { useEffect, useRef } from "react";
 import { useRecoilValue } from "recoil";
 import { currentSort } from "../state-management/atom";
-import { getAlgorithms } from "../state-management/sort-algorithms";
+import { getAlgorithms } from "../scripts/sort-algorithms";
 import Canvas from "./Canvas";
 
 
@@ -58,13 +57,11 @@ const Visualization = () => {
     const index = useRecoilValue(currentSort);
     
     
-    
     return (
         <StyledVisualization>
             {/* canvas와 닫기 창 */}
             <StyledCanvasContainer>
-                {/* Canvas컴포넌트는 따로 구분했음(로직을 따로 분리하기위해) */}
-                <Canvas />
+                <Canvas /> {/* Canvas컴포넌트는 따로 구분했음 */}
             </StyledCanvasContainer>
 
             {/* 설명칸과 시간복잡도 테이블 */}

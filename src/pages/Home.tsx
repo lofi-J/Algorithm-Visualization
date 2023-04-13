@@ -1,11 +1,11 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
-import { algorithms } from "../state-management/sort-algorithms";
-import { useSetRecoilState } from "recoil";
-import { currentSort } from "../state-management/atom";
+import { algorithms } from "../scripts/sort-algorithms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { currentSort, isModalOpen } from "../state-management/atom";
 import Card from "../components/Card"
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Modal from "../components/Modal";
 
 
@@ -38,7 +38,9 @@ const Home = () => {
     const level3 = algorithms.slice(6, 9);
 
     // modal state hook 
-    const [isOpen, setIsOpen] = useState<boolean>(true);
+    // const [isOpen, setIsOpen] = useState<boolean>(true);
+    const isOpen = useRecoilValue(isModalOpen);
+    const setIsOpen = useSetRecoilState(isModalOpen);
     // toggle modal state
     const onClickToggleModal = (index: number) => {
         setIsOpen(!isOpen); //modal open
@@ -55,7 +57,7 @@ const Home = () => {
 
             {/* modal(Detail.tsx) */}
             {
-                isOpen && <Modal onClickToggleModal={() => {onClickToggleModal(0)}} />
+                isOpen && <Modal />
             }
 
             {/*      3 * 3 형태의 flex디자인을 위해 3개씩 3번 map()를 이용했음      */}

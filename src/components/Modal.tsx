@@ -1,8 +1,8 @@
-import { useRecoilValue } from "recoil";
-import { getAlgorithms } from "../state-management/sort-algorithms"
 import styled from "styled-components";
 import Visualization from "./Visualization";
 import { useEffect } from "react";
+import { useSetRecoilState } from "recoil";
+import { isModalOpen } from "../state-management/atom";
 
 const ModalContainer = styled.div`
     position: fixed;
@@ -42,16 +42,13 @@ const Backdrop = styled.div`
     background-color: rgba(0, 0, 0, 0.5);
 `;
 
-interface ModalType {
-    onClickToggleModal: (index?: number) => void;
-}
 
-const Modal = ({onClickToggleModal} : ModalType) => {
+const Modal = () => {
     // 모달 창이 나타나면 화면을 위로 스크롤함 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [])
-
+    const setIsOpen = useSetRecoilState(isModalOpen);
     return (
         <ModalContainer>
             <DialogBox>
@@ -60,10 +57,7 @@ const Modal = ({onClickToggleModal} : ModalType) => {
             <Backdrop
                 onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
-
-                    if (onClickToggleModal) {
-                        onClickToggleModal();
-                    }
+                    setIsOpen(false);
                 }}
             />
         </ModalContainer>
