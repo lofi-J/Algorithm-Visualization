@@ -21,3 +21,13 @@ export const isModalOpen = atom({
     // default: true,
     default: false,
 })
+
+export const array = atom<number[]>({
+    key: 'array',
+    default: [],
+})
+
+export const context = atom<CanvasRenderingContext2D | null>({
+    key: 'context',
+    default: null,
+})

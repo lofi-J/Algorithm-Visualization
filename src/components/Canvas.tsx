@@ -25,21 +25,85 @@ const makeRandomArray = (count: number) => {
 
 /*  =============================================== React Component ===============================================  */
 const Canvas = () => {
-
     const [width, height] = [800, 600]; // canvas 크기    
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDarkMode = useRecoilValue(isDark); // 다크모드 감지
     const setIsOpen = useSetRecoilState(isModalOpen); //모달창 오픈 감지변수
     const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
-
-
+    let run: boolean = false;
     // 알고리즘 정보를 담고 있는 배열에 접근
     const algorithms = useRecoilValue(getAlgorithms);
     const index = useRecoilValue(currentSort);
     // 선택한 알고리즘의 인덱스
     const sortIndex = useRecoilValue(currentSort);
     
-    // canvas가 mount되면 context 초기화
+
+    // HTMLCanvas 그리기 함수
+    const draw = (ctx: CanvasRenderingContext2D | null, arr: number[], isDark: boolean) => {
+        const array = arr;
+        
+        // canvas 크기
+        const [width, height] = [800, 600];
+        // 배열의 최댓값
+        const maxValue = Math.max(...array);
+        // 막대의 width
+        const barWidth = (width / array.length);
+
+        if(ctx !== null) {
+            ctx.fillStyle = isDark ? 'white' : 'black';
+            ctx.clearRect(0, 0, width, height);
+            for(let i = 0; i < array.length; i++) {
+                // 높이를 계산할 비율을 계산
+                const ratio = height / maxValue;
+                // 막대의 높이
+                const barHeight = ratio * array[i];
+                const [x, y] = [i * barWidth, height - barHeight];
+                ctx.fillRect(x-1, y, barWidth-1, barHeight);
+            }
+        }
+    }
+    // delay
+    function setTimeoutPromise(ms: number){
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    
+
+    //1
+    const bubble = async (arr: number[], context: CanvasRenderingContext2D | null, isDarkMode: boolean) => {
+        run = true;
+        for(let i = 0; i < arr.length; i++) {
+            for(let j = 0; j < arr.length-i-1; j++) {
+                if(!run) return;
+                if(arr[j] > arr[j+1]) {
+                    const temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                
+                    await setTimeoutPromise(10);
+                    draw(context, array, isDarkMode);
+                }
+            }
+        }
+        run = false;
+    }
+    //2
+    const selection =  async (arr: number[], context: CanvasRenderingContext2D | null, isDarkMode: boolean) => {
+        for(let i = 0; i < arr.length; i++) {
+            let min = i;
+            for(let j = i + 1; j < arr.length; j++) {
+                if(arr[min] > arr[j]) {
+                    min = j;
+                }
+            }
+            if(i != min) {
+                [arr[i], arr[min]] = [arr[min], arr[i]];     
+            }
+            await setTimeoutPromise(10);
+            draw(context, array, isDarkMode);
+        }
+    }
+
+    // canvas가 mount되면 context 초기화 and 배열 할당
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) { return }
@@ -54,20 +118,23 @@ const Canvas = () => {
     
     // x button click
     const onClickClose = () => {
+        run = false;
         setIsOpen(false);
     }
 
     // play button click
     const onClickPlay = () => {
+        if(run) return;
+
         switch(sortIndex) {
-            case 0: 
+            case 0:
                 bubble(array, context, isDarkMode);
                 break;
             case 1:
                 selection(array, context, isDarkMode);
                 break;
             case 2:
-                insertion(array, context, isDarkMode);
+                // insertion(array, context, isDarkMode);
                 break;
             
             default: console.error('아직 정렬알고리즘이 할당되지 않음');
@@ -75,6 +142,7 @@ const Canvas = () => {
     }
     // shuffle button click
     const onClickShuffle = () => {
+        run = false;
         shuffle(array);
         draw(context, array, isDarkMode);
     }
@@ -89,38 +157,12 @@ const Canvas = () => {
                 <FontAwesomeIcon className="play" onClick={onClickPlay} icon={faPlay} /> {/* play button */}
                 <FontAwesomeIcon className="shuffle" onClick={onClickShuffle} icon={faShuffle} /> {/* shuffle button */}
             </div>
-            <canvas ref={canvasRef} width={width} height={height} ></canvas>
+            <canvas ref={canvasRef} width={width} height={height}></canvas>
         </StyledCanvasContainer>
     );
 }
 
 export default Canvas;
-
-
-// HTMLCanvas 그리기 함수
-const draw = (ctx: CanvasRenderingContext2D | null, arr: number[], isDark: boolean) => {
-    const array = arr;
-    
-    // canvas 크기
-    const [width, height] = [800, 600];
-    // 배열의 최댓값
-    const maxValue = Math.max(...array);
-    // 막대의 width
-    const barWidth = (width / array.length);
-
-    if(ctx !== null) {
-        ctx.fillStyle = isDark ? 'white' : 'black';
-        ctx.clearRect(0, 0, width, height);
-        for(let i = 0; i < array.length; i++) {
-            // 높이를 계산할 비율을 계산
-            const ratio = height / maxValue;
-            // 막대의 높이
-            const barHeight = ratio * array[i];
-            const [x, y] = [i * barWidth, height - barHeight];
-            ctx.fillRect(x-1, y, barWidth-1, barHeight);
-        }
-    }
-}
 
 const StyledCanvasContainer = styled.div`
     width: 100%;
@@ -158,52 +200,20 @@ const StyledCanvasContainer = styled.div`
 `
 
 
-//1
-const bubble = (arr: number[], context: CanvasRenderingContext2D | null, isDarkMode: boolean) => {
-    for(let i = 0; i < arr.length; i++) {
-        for(let j = 0; j < arr.length-i-1; j++) {
-            if(arr[j] > arr[j+1]) {
-                const temp = arr[j];
-                arr[j] = arr[j+1];
-                arr[j+1] = temp;
-                //draw
-                setTimeout(()=>{
-                    draw(context, array, isDarkMode);
-                }, 1000)
-                
-            }
-        }
-    }
-}
 
-//2
-const selection = (arr: number[], context: CanvasRenderingContext2D | null, isDarkMode: boolean) => {
-    for(let i = 0; i < arr.length; i++) {
-        let min = i;
-        for(let j = i + 1; j < arr.length; j++) {
-            if(arr[min] > arr[j]) {
-                min = j;
-            }
-        }
-        if(i != min) {
-            [arr[i], arr[min]] = [arr[min], arr[i]];
-            draw(context, array, isDarkMode);     
-        }
-    }
-}
 
-//3
-const insertion = (arr: number[], context: CanvasRenderingContext2D | null, isDarkMode: boolean) =>{
-    let i, j, key;
-    for(let i = 1; i < arr.length; i++) {
-        key = arr[i];
-        j = i - 1;
-        while(j >= 0 && arr[j] > key)
-        {
-            arr[j+1] = arr[j];
-            j = j-1;
-        } 
-        arr[j+1] = key;
-        draw(context, array, isDarkMode);
-    }
-}
+// //3
+// const insertion = (arr: number[], context: CanvasRenderingContext2D | null, isDarkMode: boolean) =>{
+//     let i, j, key;
+//     for(let i = 1; i < arr.length; i++) {
+//         key = arr[i];
+//         j = i - 1;
+//         while(j >= 0 && arr[j] > key)
+//         {
+//             arr[j+1] = arr[j];
+//             j = j-1;
+//         } 
+//         arr[j+1] = key;
+//         draw(context, array, isDarkMode);
+//     }
+// }
