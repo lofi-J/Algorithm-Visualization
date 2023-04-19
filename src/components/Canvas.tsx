@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { atom, useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { currentSort, isDark, isModalOpen } from "../state-management/atom";
 import { getAlgorithms } from "../scripts/sort-algorithms";
@@ -51,7 +51,7 @@ const Canvas = () => {
 
         if(ctx !== null) {
             ctx.fillStyle = isDark ? 'white' : 'black';
-            ctx.clearRect(0, 0, width, height);
+            ctx.clearRect(0, 0, width, height); //새로 그리기전 화면 비우기
             for(let i = 0; i < array.length; i++) {
                 // 높이를 계산할 비율을 계산
                 const ratio = height / maxValue;
@@ -66,42 +66,174 @@ const Canvas = () => {
     function setTimeoutPromise(ms: number){
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
+    //swap
+    const swap = (array: number[], i: number, j: number) => {
+        const temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
     
-
+    /* 정렬 및 시각화 함수들 */
     //1
-    const bubble = async (arr: number[], context: CanvasRenderingContext2D | null, isDarkMode: boolean) => {
-        run = true;
-        for(let i = 0; i < arr.length; i++) {
-            for(let j = 0; j < arr.length-i-1; j++) {
-                if(!run) return;
-                if(arr[j] > arr[j+1]) {
-                    const temp = arr[j];
-                    arr[j] = arr[j+1];
-                    arr[j+1] = temp;
+    const bubble = async () => {
+        for(let i = 0; i < array.length; i++) {
+            for(let j = 0; j < array.length-i-1; j++) {
+                if(array[j] > array[j+1]) {
+                    const temp = array[j];
+                    array[j] = array[j+1];
+                    array[j+1] = temp;
                 
                     await setTimeoutPromise(10);
                     draw(context, array, isDarkMode);
                 }
             }
         }
-        run = false;
     }
     //2
-    const selection =  async (arr: number[], context: CanvasRenderingContext2D | null, isDarkMode: boolean) => {
-        for(let i = 0; i < arr.length; i++) {
+    const selection =  async () => {
+        for(let i = 0; i < array.length; i++) {
             let min = i;
-            for(let j = i + 1; j < arr.length; j++) {
-                if(arr[min] > arr[j]) {
+            for(let j = i + 1; j < array.length; j++) {
+                if(array[min] > array[j]) {
                     min = j;
+                    await setTimeoutPromise(10);
+                    draw(context, array, isDarkMode);
                 }
             }
             if(i != min) {
-                [arr[i], arr[min]] = [arr[min], arr[i]];     
+                [array[i], array[min]] = [array[min], array[i]];     
+                
             }
             await setTimeoutPromise(10);
             draw(context, array, isDarkMode);
         }
     }
+    //3
+    const insertion = async () =>{
+        let i, j, key;
+        for(i = 1; i < array.length; i++) {
+            key = array[i];
+            j = i - 1;
+            
+            while(j >= 0 && array[j] > key)
+            {
+                array[j+1] = array[j];
+                j = j-1;
+                await setTimeoutPromise(10);
+                draw(context, array, isDarkMode);
+            } 
+            array[j+1] = key;
+            await setTimeoutPromise(10);
+            draw(context, array, isDarkMode);
+        }
+    }
+    //4
+    const temp = new Array<number>(100);
+    async function mergeSort(array: number[], start: number, end: number) {
+        if(start < end) {
+            const mid = (start + end) >> 1;
+            await mergeSort(array, start, mid);
+            await mergeSort(array, mid+1, end);
+            merge(array, start, mid, end);
+            await setTimeoutPromise(10);
+            draw(context, array, isDarkMode);
+        }
+        async function merge(array: number[], start: number, mid: number, end: number) {
+            let index = start;
+            let leftIndex = start;
+            let rightIndex = mid+1;
+            while(leftIndex<=mid && rightIndex <=end) {
+                if(array[leftIndex] < array[rightIndex]) {
+                    temp[index] = array[leftIndex];
+                    leftIndex++;
+                }
+                else {
+                    temp[index] = array[rightIndex];
+                    rightIndex++;
+                }
+                index++;
+            }
+            if(leftIndex > mid) {
+                for(let i=rightIndex; i<=end; i++) {
+                    temp[index] = array[i];
+                    index++;
+                }
+            }
+            else {
+                for(let i=leftIndex; i<=mid; i++) {
+                    temp[index] = array[i];
+                    index++;
+                }
+            }
+            index = start;
+            while(index <= end) {
+                array[index] = temp[index];
+                index++;
+            }
+        }
+    }
+    //5
+    async function heapSort(array: number[]) {
+        const len = array.length;
+        let lastIndex = len-1;
+        //build heap
+        for(let i=Math.floor(len/2)-1; i>=0; i--) {
+            await setTimeoutPromise(10);
+            draw(context, array, isDarkMode);
+            heapify(array, len, i);
+        }
+        //sort
+        while(lastIndex > 0) {
+            swap(array, 0, lastIndex);
+            heapify(array, lastIndex, 0);
+            lastIndex--;
+            await setTimeoutPromise(10);
+            draw(context, array, isDarkMode);
+        }
+        function heapify(array: number[], range: number, index: number) {
+            let largest = index;
+            const l = (index * 2) + 1;
+            const r = (index * 2) + 2;
+        
+            if(l < range && array[largest] < array[l]) { largest = l; }
+            if(r < range && array[largest] < array[r]) { largest = r; }
+        
+            if(largest != index) {
+                swap(array, index, largest);
+                heapify(array, range, largest);
+            }
+        }
+    }
+    //6
+    async function quickSort(array: number[], start: number, end: number) {
+        if(start < end) {
+            let pivot = await partition(array, start, end);
+            await setTimeoutPromise(100);
+            quickSort(array, start, pivot-1);
+            await setTimeoutPromise(100);
+            quickSort(array, pivot+1, end);
+            await setTimeoutPromise(100);
+            draw(context, array, isDarkMode);
+        }
+        async function partition(array: number[], start: number, end: number) {
+            let pivot = array[end];
+            let i = (start-1);
+            for(let j = start; j <= end-1; j++) {
+                if(array[j] < pivot) {
+                    i++;
+                    swap(array, i, j);
+                }
+            }
+            swap(array, i + 1, end);
+            return (i+1);
+        }
+    }
+
+
+
+
+
+
 
     // canvas가 mount되면 context 초기화 and 배열 할당
     useEffect(() => {
@@ -115,30 +247,10 @@ const Canvas = () => {
         draw(ctx, array, isDarkMode); //초기화면 그리기
     }, [])
     
-    
     // x button click
     const onClickClose = () => {
         run = false;
         setIsOpen(false);
-    }
-
-    // play button click
-    const onClickPlay = () => {
-        if(run) return;
-
-        switch(sortIndex) {
-            case 0:
-                bubble(array, context, isDarkMode);
-                break;
-            case 1:
-                selection(array, context, isDarkMode);
-                break;
-            case 2:
-                // insertion(array, context, isDarkMode);
-                break;
-            
-            default: console.error('아직 정렬알고리즘이 할당되지 않음');
-        }
     }
     // shuffle button click
     const onClickShuffle = () => {
@@ -146,6 +258,54 @@ const Canvas = () => {
         shuffle(array);
         draw(context, array, isDarkMode);
     }
+    // play button click
+    const onClickPlay = () => {
+        if(run) return;
+
+        switch(sortIndex) {
+            case 0:
+                run = true;
+                bubble();
+                run = false;
+                break;
+            case 1:
+                run = true;
+                selection();
+                run = false;
+                break;
+            case 2:
+                run = true;
+                insertion();
+                run = false;
+                break;
+            case 3: 
+                run = true;
+                mergeSort(array, 0, array.length-1);
+                run = false;
+                break;
+            case 4:
+                run = true;
+                heapSort(array);                
+                run = false;
+                break;
+            case 5:
+                run = true;
+                quickSort(array, 0, array.length-1);
+                run = false;
+                break;
+            case 6:
+                console.log('radix sort')
+                break;
+            case 7:
+                console.log('shell sort')
+                break;
+            case 8:
+                console.log('counting sort')
+                break;
+            default: console.error('아직 정렬알고리즘이 할당되지 않음');
+        }
+    }
+
 
     return (
         <StyledCanvasContainer>
@@ -198,22 +358,3 @@ const StyledCanvasContainer = styled.div`
         height: 350px;
     }
 `
-
-
-
-
-// //3
-// const insertion = (arr: number[], context: CanvasRenderingContext2D | null, isDarkMode: boolean) =>{
-//     let i, j, key;
-//     for(let i = 1; i < arr.length; i++) {
-//         key = arr[i];
-//         j = i - 1;
-//         while(j >= 0 && arr[j] > key)
-//         {
-//             arr[j+1] = arr[j];
-//             j = j-1;
-//         } 
-//         arr[j+1] = key;
-//         draw(context, array, isDarkMode);
-//     }
-// }
