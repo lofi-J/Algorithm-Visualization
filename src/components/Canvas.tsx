@@ -8,18 +8,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 let array: number[] = [];
-
+let tempShuffleArr: number[] = [];
 // 무작위로 섞는 함수(Math.random())
 const shuffle = (array: number[]) => {
     array.sort(() => Math.random() - 0.5);
 }
 // 무작위로 섞인 number들을 배열에 할당하는 함수(count: 생성할 배열의 길이)
-const makeRandomArray = (count: number) => {
+    const makeRandomArray = (count: number) => {
     array = [];
+    tempShuffleArr = [];
     for(let i = 1; i <= count; i++) {
-        array.push(i / 2);
+        tempShuffleArr.push(i / 2);
     }
-    shuffle(array);
+    shuffle(tempShuffleArr);
 }
 
 
@@ -78,6 +79,7 @@ const Canvas = () => {
     const bubble = async () => {
         for(let i = 0; i < array.length; i++) {
             for(let j = 0; j < array.length-i-1; j++) {
+                if(!run) return; //중복실행 방지 및 셔플시 취소
                 if(array[j] > array[j+1]) {
                     const temp = array[j];
                     array[j] = array[j+1];
@@ -94,6 +96,7 @@ const Canvas = () => {
         for(let i = 0; i < array.length; i++) {
             let min = i;
             for(let j = i + 1; j < array.length; j++) {
+                if(!run) return; // 중복실행 방지 및 셔플시 취소
                 if(array[min] > array[j]) {
                     min = j;
                     await setTimeoutPromise(10);
@@ -117,6 +120,8 @@ const Canvas = () => {
             
             while(j >= 0 && array[j] > key)
             {
+                if(!run) return; //중복실행 방지 및 셔플시 취소
+
                 array[j+1] = array[j];
                 j = j-1;
                 await setTimeoutPromise(10);
@@ -130,6 +135,8 @@ const Canvas = () => {
     //4
     const temp = new Array<number>(100);
     async function mergeSort(array: number[], start: number, end: number) {
+        if(!run) return;
+
         if(start < end) {
             const mid = (start + end) >> 1;
             await mergeSort(array, start, mid);
@@ -138,7 +145,10 @@ const Canvas = () => {
             await setTimeoutPromise(10);
             draw(context, array, isDarkMode);
         }
+        
         async function merge(array: number[], start: number, mid: number, end: number) {
+            if(!run) return;
+
             let index = start;
             let leftIndex = start;
             let rightIndex = mid+1;
@@ -184,10 +194,12 @@ const Canvas = () => {
         }
         //sort
         while(lastIndex > 0) {
+            await setTimeoutPromise(100);
+
             swap(array, 0, lastIndex);
             heapify(array, lastIndex, 0);
             lastIndex--;
-            await setTimeoutPromise(10);
+            
             draw(context, array, isDarkMode);
         }
         function heapify(array: number[], range: number, index: number) {
@@ -206,31 +218,36 @@ const Canvas = () => {
     }
     //6
     async function quickSort(array: number[], start: number, end: number) {
+        
         if(start < end) {
             let pivot = await partition(array, start, end);
+
             await setTimeoutPromise(100);
+
             quickSort(array, start, pivot-1);
-            await setTimeoutPromise(100);
+            
             quickSort(array, pivot+1, end);
-            await setTimeoutPromise(100);
+            
             draw(context, array, isDarkMode);
         }
         async function partition(array: number[], start: number, end: number) {
             let pivot = array[end];
             let i = (start-1);
             for(let j = start; j <= end-1; j++) {
+                
                 if(array[j] < pivot) {
+                    await setTimeoutPromise(100);
                     i++;
                     swap(array, i, j);
+                    draw(context, array, isDarkMode);
                 }
             }
             swap(array, i + 1, end);
+            draw(context, array, isDarkMode);
             return (i+1);
         }
     }
-
-
-
+    //7
 
 
 
@@ -244,7 +261,7 @@ const Canvas = () => {
         setContext(ctx);
         makeRandomArray(100); //array 초기화
 
-        draw(ctx, array, isDarkMode); //초기화면 그리기
+        draw(ctx, tempShuffleArr, isDarkMode); //초기화면 그리기
     }, [])
     
     // x button click
@@ -255,43 +272,32 @@ const Canvas = () => {
     // shuffle button click
     const onClickShuffle = () => {
         run = false;
-        shuffle(array);
-        draw(context, array, isDarkMode);
+        shuffle(tempShuffleArr);
+        draw(context, tempShuffleArr, isDarkMode);
     }
     // play button click
-    const onClickPlay = () => {
+    const onClickPlay = async () => {
         if(run) return;
-
+        run = true;
+        array = tempShuffleArr;
         switch(sortIndex) {
             case 0:
-                run = true;
-                bubble();
-                run = false;
+                await bubble();
                 break;
             case 1:
-                run = true;
-                selection();
-                run = false;
+                await selection();
                 break;
             case 2:
-                run = true;
-                insertion();
-                run = false;
+                await insertion();
                 break;
             case 3: 
-                run = true;
-                mergeSort(array, 0, array.length-1);
-                run = false;
+                await mergeSort(array, 0, array.length-1);
                 break;
             case 4:
-                run = true;
-                heapSort(array);                
-                run = false;
+                await heapSort(array);         
                 break;
             case 5:
-                run = true;
-                quickSort(array, 0, array.length-1);
-                run = false;
+                await quickSort(array, 0, array.length-1);
                 break;
             case 6:
                 console.log('radix sort')
@@ -302,8 +308,11 @@ const Canvas = () => {
             case 8:
                 console.log('counting sort')
                 break;
-            default: console.error('아직 정렬알고리즘이 할당되지 않음');
+            default: 
+                console.error('아직 정렬알고리즘이 할당되지 않음');
         }
+        console.log('after part')
+        run = false;
     }
 
 
