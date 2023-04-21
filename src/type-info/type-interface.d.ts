@@ -3,12 +3,18 @@ export interface HeaderProp {
     isInfomation: boolean
 }
 
+
 export interface CardProp {
     onClick: () => void;
     index: number;
     data: {
         name: string;
-        timeComplex: string;
+        timeComplex: {
+            average: string,
+            best: string,
+            worst: string,
+            space: string
+        }
     }
 }
 

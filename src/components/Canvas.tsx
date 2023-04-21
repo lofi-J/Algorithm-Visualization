@@ -18,7 +18,7 @@ const shuffle = (array: number[]) => {
     array = [];
     tempShuffleArr = [];
     for(let i = 1; i <= count; i++) {
-        tempShuffleArr.push(i / 2);
+        tempShuffleArr.push(i);
     }
     shuffle(tempShuffleArr);
 }
@@ -136,19 +136,18 @@ const Canvas = () => {
     const temp = new Array<number>(100);
     async function mergeSort(array: number[], start: number, end: number) {
         if(!run) return;
-
+        await setTimeoutPromise(10);
         if(start < end) {
             const mid = (start + end) >> 1;
             await mergeSort(array, start, mid);
             await mergeSort(array, mid+1, end);
-            merge(array, start, mid, end);
-            await setTimeoutPromise(10);
+            await merge(array, start, mid, end);
             draw(context, array, isDarkMode);
         }
         
         async function merge(array: number[], start: number, mid: number, end: number) {
             if(!run) return;
-
+            await setTimeoutPromise(10);
             let index = start;
             let leftIndex = start;
             let rightIndex = mid+1;
@@ -188,13 +187,15 @@ const Canvas = () => {
         let lastIndex = len-1;
         //build heap
         for(let i=Math.floor(len/2)-1; i>=0; i--) {
+            if(!run) return; // 중복실행 방지 및 셔플시 취소
             await setTimeoutPromise(10);
-            draw(context, array, isDarkMode);
             heapify(array, len, i);
+            draw(context, array, isDarkMode);
         }
         //sort
         while(lastIndex > 0) {
-            await setTimeoutPromise(100);
+            if(!run) return; // 중복실행 방지 및 셔플시 취소
+            await setTimeoutPromise(10);
 
             swap(array, 0, lastIndex);
             heapify(array, lastIndex, 0);
@@ -203,42 +204,45 @@ const Canvas = () => {
             draw(context, array, isDarkMode);
         }
         function heapify(array: number[], range: number, index: number) {
+            if(!run) return; // 중복실행 방지 및 셔플시 취소
             let largest = index;
             const l = (index * 2) + 1;
             const r = (index * 2) + 2;
         
             if(l < range && array[largest] < array[l]) { largest = l; }
             if(r < range && array[largest] < array[r]) { largest = r; }
-        
+            
             if(largest != index) {
                 swap(array, index, largest);
                 heapify(array, range, largest);
             }
+            setTimeoutPromise(10);
+            draw(context, array, isDarkMode);
         }
     }
     //6
     async function quickSort(array: number[], start: number, end: number) {
-        
+        if(!run) return; //중복실행 방지 및 셔플시 취소
         if(start < end) {
             let pivot = await partition(array, start, end);
 
-            await setTimeoutPromise(100);
-
-            quickSort(array, start, pivot-1);
-            
-            quickSort(array, pivot+1, end);
+            await setTimeoutPromise(10);
+            await quickSort(array, start, pivot-1);
+            await setTimeoutPromise(10);
+            await quickSort(array, pivot+1, end);
             
             draw(context, array, isDarkMode);
         }
         async function partition(array: number[], start: number, end: number) {
+            if(!run) return 0; //중복실행 방지 및 셔플시 취소
             let pivot = array[end];
             let i = (start-1);
-            for(let j = start; j <= end-1; j++) {
-                
+            for(let j = start; j <= end-1; j++) {    
+                if(!run) return 0; //중복실행 방지 및 셔플시 취소
                 if(array[j] < pivot) {
-                    await setTimeoutPromise(100);
                     i++;
                     swap(array, i, j);
+                    await setTimeoutPromise(10);
                     draw(context, array, isDarkMode);
                 }
             }
@@ -248,8 +252,82 @@ const Canvas = () => {
         }
     }
     //7
+    async function radixSort(arr: number[]) {
+        const maxNum = Math.max(...arr);
+        const maxLength = maxNum.toString().length;
 
+        function getDigit(num: number, digit: number, maxNum: number): number {
+            const base = 10 ** digit;
+            const normalized = Math.abs(num) % (base * 10);
+            const result = Math.floor(normalized / base);
+            return result + ((num<0) ? 9 : 0);
+        }
 
+        let buckets: number[][] = Array.from({length: 10}, () => []);
+
+        for(let i = 0; i < maxLength; i++) {
+            for(let j = 0; j < arr.length; j++) {
+                const element = arr[j];
+                const digit = getDigit(element, i, maxNum);
+                buckets[digit].push(element);
+            }
+            
+            let index = 0
+            for (let k = 0; k < buckets.length; k++) {
+                const bucket = buckets[k];
+                for (let l = 0; l < bucket.length; l++) {
+                    await setTimeoutPromise(20);
+                    arr[index++] = bucket[l];
+                    draw(context, array, isDarkMode);
+                }
+            }
+            draw(context, array, isDarkMode);
+            buckets = Array.from({ length: 10 }, () => []);
+        }
+    }
+    //8
+    async function shellSort(arr: number[]) {
+        let n = arr.length;
+        for(let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
+            for(let i = gap; i < n; i+=1) {
+                let temp = arr[i];
+                let j;
+                for(j = i; j >= gap && arr[j-gap] > temp; j-=gap) {
+                    if(!run) return;
+                    arr[j] = arr[j-gap];
+                    await setTimeoutPromise(10);
+                    draw(context, array, isDarkMode);
+                }
+                arr[j] = temp;
+                await setTimeoutPromise(10);
+                draw(context, array, isDarkMode);
+            }
+        }
+    }
+    //9
+    async function countingSort(arr: number[]) {
+        const maxValue = Math.max(...arr);
+        const countArr: number[] = Array(maxValue);
+        countArr.fill(0);
+
+        for(let i = 0; i < arr.length; i++) {
+            if(!run) return;
+            countArr[arr[i]]++;
+        }
+        array = [];
+        draw(context, array, isDarkMode);
+        for(let j = 0; j < countArr.length; j++) {
+            if(countArr[j] !== 0) {
+                for(let k = 0; k < countArr[j]; k++) {
+                    if(!run) return;
+                    await setTimeoutPromise(10);
+                    array.push(j);
+                    draw(context, array, isDarkMode);
+                }
+            }
+        }
+        draw(context, array, isDarkMode);
+    }
 
 
     // canvas가 mount되면 context 초기화 and 배열 할당
@@ -259,7 +337,7 @@ const Canvas = () => {
 
         const ctx = canvas.getContext('2d');
         setContext(ctx);
-        makeRandomArray(100); //array 초기화
+        makeRandomArray(200); //array 초기화
 
         draw(ctx, tempShuffleArr, isDarkMode); //초기화면 그리기
     }, [])
@@ -277,7 +355,9 @@ const Canvas = () => {
     }
     // play button click
     const onClickPlay = async () => {
-        if(run) return;
+        if(run) {
+            return;
+        }
         run = true;
         array = tempShuffleArr;
         switch(sortIndex) {
@@ -300,18 +380,17 @@ const Canvas = () => {
                 await quickSort(array, 0, array.length-1);
                 break;
             case 6:
-                console.log('radix sort')
+                await radixSort(array); 
                 break;
             case 7:
-                console.log('shell sort')
+                await shellSort(array);
                 break;
             case 8:
-                console.log('counting sort')
+                await countingSort(array);
                 break;
             default: 
                 console.error('아직 정렬알고리즘이 할당되지 않음');
         }
-        console.log('after part')
         run = false;
     }
 

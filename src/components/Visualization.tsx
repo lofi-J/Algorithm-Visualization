@@ -15,38 +15,57 @@ const StyledVisualization = styled.div`
 // 캔버스 컨테이너
 const StyledCanvasContainer = styled.div`
     display: block;
+    padding: 1rem;
 `
 
 // 설명 및 시간 복잡도 컨테이너
 const StyledContentContainer = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin-top: 1rem;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
 
-    .description {
-        display: flex;
-        flex-direction: column;
-        line-height: 1.5rem;
-        width: 60%;
-
-        p {
-            margin: .5rem 0;
-            font-size: 14px;
-        }
-    }
-    .complexity {
-        width: 40%;
-        margin-left: 2rem;
-    }
-    .description, .complexity {
+    .description, .time-complexity-table {
         box-sizing: border-box;
-        padding: .5rem;
+        padding: 1rem;
+    }
+    .description {
+        margin-bottom: 1rem;
+    }
+
+    p {
+        margin-bottom: 1rem;
     }
 
     .title {
         font-weight: 200;
         font-size: 30px;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+    }
+`
+const StyledTable = styled.div`
+    text-align: left;
+    /* padding-left: 1rem; */
+    /* background-color: tomato; */
+    table {
+        th, td {
+            border: 1.5px solid;
+            padding: .7rem;
+            font-size: 1.3rem;
+        }
+        th {
+            border-left: none;
+        }
+        td {
+            border-right: none;
+        }
+        .average {
+            border-top: none;
+        }
+        .space {
+            border-bottom: none;
+        }
     }
 `
 
@@ -55,7 +74,6 @@ const Visualization = () => {
     // 알고리즘 정보를 담고 있는 배열에 접근
     const algorithms = useRecoilValue(getAlgorithms);
     const index = useRecoilValue(currentSort);
-    
     
     return (
         <StyledVisualization>
@@ -74,9 +92,35 @@ const Visualization = () => {
                         ))
                     }
                 </div>
-                <div className="complexity">
-                    <div className="title">COMPLEXITY</div>
-                </div>
+                    
+                <StyledTable className="time-complexity-table">
+                    <div className="title">TIME COMPLEXITY</div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th className="average">Average Complexity</th>
+                                <td className="average">{algorithms[index].timeComplex.average}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Best Case</th>
+                                <td>{algorithms[index].timeComplex.best}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Worst Case</th>
+                                <td>{algorithms[index].timeComplex.worst}</td>
+                            </tr>
+
+                            <tr>
+                                <th className="space">Space Complexity</th>
+                                <td className="space">{algorithms[index].timeComplex.space}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </StyledTable>
             </StyledContentContainer>
         </StyledVisualization>
     )

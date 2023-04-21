@@ -1,12 +1,12 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
-import { algorithms } from "../scripts/sort-algorithms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { currentSort, isModalOpen } from "../state-management/atom";
 import Card from "../components/Card"
 import { useEffect } from "react";
 import Modal from "../components/Modal";
+import { getAlgorithms } from "../scripts/sort-algorithms";
 
 
 const StyledHome = styled.main`
@@ -32,6 +32,7 @@ const Home = () => {
     const location = useLocation();
     // currentSort atom 
     const setCurrentSort = useSetRecoilState(currentSort);
+    const algorithms = useRecoilValue(getAlgorithms);
     
     const level1 = algorithms.slice(0, 3);
     const level2 = algorithms.slice(3, 6);

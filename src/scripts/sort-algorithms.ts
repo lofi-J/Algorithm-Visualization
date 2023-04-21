@@ -30,9 +30,7 @@ const counting = () => {
 
 // DESCRIPTIONS
 const bubbleInfo = [
-`버블 정렬(Bubble Sort)은 물 속 거품의 움직임과 유사하게 동작하며 거품은 데이터 구조의 요소를 나타냅니다.
-큰 거품은 작은 거품보다 더 빨리 위로 올라가며, 이 알고리즘도 마찬가지로 동작합니다.
-데이터 구조를 반복하여 각 사이클에서 현재 요소를 다음 요소와 비교하고, 잘못된 순서에 있다면 서로 교환해줍니다.`,
+`버블 정렬(Bubble Sort)은 데이터 구조를 반복하여 각 사이클에서 현재 요소를 다음 요소와 비교하고, 잘못된 순서에 있다면 서로 교환해줍니다.`,
 
 `구현하기 쉬운 알고리즘이지만 효율성은 좋지 못해 평균적으로 선택 정렬이나 삽입 정렬과 같은 시간 복잡도를 가지는 이차 정렬 알고리즘들이 더 나은 성능을 보여줍니다.
 Shaker Sort, Odd Even Sort, Comb Sort와 같은 여러 가지 변형이 있어 성능개선의 여지가 있습니다.
@@ -87,7 +85,7 @@ const radixInfo = [
 `4. 버킷에 저장된 데이터를 순서대로 다시 배열에 저장합니다.`,
 `5. 모든 자릿수에 대해 위 과정을 반복합니다.`,
 
-`Radix Sort는 안정 정렬(stable sort)이며, 비교 기반 정렬 알고리즘이 아니기 때문에 비교 연산이 필요하지 않습니다. 따라서 특정 조건에서 다른 알고리즘보다 더 빠른 속도를 보이며, 특히 정렬 대상 데이터의 크기가 작을 때 유용합니다. 그러나 데이터 크기가 매우 클 경우에는 메모리 사용량이 많아지는 문제가 있을 수 있습니다.`
+`Radix Sort는 안정 정렬(stable sort)이며, 비교 기반 정렬 알고리즘이 아니기 때문에 비교 연산이 필요하지 않습니다. 따라서 특정 조건에서 다른 알고리즘보다 더 빠른 속도를 보이며, 특히 정렬 대상 데이터의 크기가 작을 때 유용합니다. 그러나 데이터 크기가 매우 클 경우에는 메모리 사용량이 많아지는 문제가 있으며 정수가 아닌 수의 경우 적용이 어렵다는 문제점이 있습니다.`
 ]
 
 const shellInfo = [
@@ -110,18 +108,83 @@ const countingInfo = [
 `Counting Sort는 안정 정렬(stable sort)이며, 시간 복잡도는 O(n + k)입니다. 단, 카운트 배열을 위해 O(k)의 공간 복잡도가 필요하며, max 값이 큰 경우에는 카운트 배열이 커져서 공간 복잡도가 높아질 수 있습니다. 또한, 정렬할 수 있는 요소의 범위가 제한적이어야 하며, 음수 요소의 경우에는 적용이 어렵습니다. Counting Sort는 대부분의 경우에 퀵 정렬(Quick Sort)이나 병합 정렬(Merge Sort)과 같은 알고리즘보다 빠른 속도를 보입니다.`
 ]
 
+
 export const algorithms = [
-    { name: 'Bubble sort', timeComplex: 'O(n\u00B2)', info: bubbleInfo, index: 0},
-    { name: 'Selection sort', timeComplex: 'O(n\u00B2)', info: selectionInfo, index:1},
-    { name: 'Insertion sort', timeComplex: 'O(n\u00B2)', info: insertionInfo, index:2},
+    { name: 'Bubble sort', 
+    timeComplex: {
+        average: `O(n²)`,
+        best: 'O(n)',
+        worst: 'O(n²)',
+        space: 'O(1)'
+    }, info: bubbleInfo, index: 0},
 
-    { name: 'Merge sort', timeComplex: 'O(n x logn)', info: mergeInfo, index: 3},
-    { name: 'Heap sort', timeComplex: 'O(n x logn)', info: heapInfo, index: 4},
-    { name: 'Quick sort', timeComplex: 'O(n x logn)', info: quickInfo, index: 5},
+    { name: 'Selection sort',
+    timeComplex: {
+        average: 'O(n²)',
+        best: 'O(n²)',
+        worst: 'O(n²)',
+        space: 'O(1)'
+    }, info: selectionInfo, index:1},
 
-    { name: 'Radix sort', timeComplex: 'O(kn)', info: radixInfo, index: 6},
-    { name: 'Shell sort', timeComplex: 'Depends on gap sequence', info: shellInfo, index:7},
-    { name: 'Counting sort', timeComplex: 'O(n+k)', info: countingInfo, index:8},
+    { name: 'Insertion sort',
+    timeComplex: {
+        average: 'O(n²)',
+        best: 'O(n)',
+        worst: 'O(n²)',
+        space: 'O(1)'
+    }, info: insertionInfo, index:2},
+
+
+
+    { name: 'Merge sort', 
+    timeComplex: {
+        average: 'O(n × log n)',
+        best: 'O(n × log n)',
+        worst: 'O(n × log n)',
+        space: 'O(n)'
+    }, info: mergeInfo, index: 3},
+
+    { name: 'Heap sort',
+    timeComplex: {
+        average: 'O(n × log n)',
+        best: 'O(n × log n)',
+        worst: 'O(n × log n)',
+        space: 'O(1)'
+    } , info: heapInfo, index: 4},
+
+    { name: 'Quick sort',
+    timeComplex: {
+        average: 'O(n × log n)',
+        best: 'O(n × log n)',
+        worst: 'O(n²)',
+        space: 'O(n)'
+    }, info: quickInfo, index: 5},
+
+
+
+    { name: 'Radix sort',
+    timeComplex: {
+        average: 'O(d × (n + b))',
+        best: 'O(d × (n + b))',
+        worst: 'O(d × (n + b))',
+        space: 'O(n + 2^d)'
+    }, info: radixInfo, index: 6},
+
+    { name: 'Shell sort',
+    timeComplex: {
+        average: 'Depending on the gap sequence',
+        best: 'O(n × log n)',
+        worst: 'O(n²)',
+        space: 'O(1)'
+    }, info: shellInfo, index:7},
+
+    { name: 'Counting sort',
+    timeComplex: {
+        average: 'O(n+k)',
+        best: 'O(n+k)',
+        worst: 'O(n+k)',
+        space: 'O(n+k)'
+    }, info: countingInfo, index:8},
 ]
 const algorithmsState = atom({
     key: 'algorithms',
