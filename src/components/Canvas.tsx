@@ -26,7 +26,8 @@ const shuffle = (array: number[]) => {
 
 /*  =============================================== React Component ===============================================  */
 const Canvas = () => {
-    const [width, height] = [800, 600]; // canvas 크기    
+    const [canvasWidth, canvasHeight] = [800, 600]; // canvas 크기   
+    const count = 100; 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDarkMode = useRecoilValue(isDark); // 다크모드 감지
     const setIsOpen = useSetRecoilState(isModalOpen); //모달창 오픈 감지변수
@@ -42,9 +43,8 @@ const Canvas = () => {
     // HTMLCanvas 그리기 함수
     const draw = (ctx: CanvasRenderingContext2D | null, arr: number[], isDark: boolean) => {
         const array = arr;
-        
         // canvas 크기
-        const [width, height] = [800, 600];
+        const [width, height] = [canvasWidth, canvasHeight];
         // 배열의 최댓값
         const maxValue = Math.max(...array);
         // 막대의 width
@@ -74,11 +74,10 @@ const Canvas = () => {
         array[j] = temp;
     }
     
-    /* 정렬 및 시각화 함수들 */
-    //1
+    /* 정렬 및 시각화 함수들 */    
     const bubble = async () => {
         for(let i = 0; i < array.length; i++) {
-            for(let j = 0; j < array.length-i-1; j++) {
+            for(let j = 0; j < array.length-i-1; j++) {               
                 if(!run) return; //중복실행 방지 및 셔플시 취소
                 if(array[j] > array[j+1]) {
                     const temp = array[j];
@@ -133,7 +132,7 @@ const Canvas = () => {
         }
     }
     //4
-    const temp = new Array<number>(100);
+    const temp = new Array<number>(count);
     async function mergeSort(array: number[], start: number, end: number) {
         if(!run) return;
         await setTimeoutPromise(10);
@@ -337,7 +336,7 @@ const Canvas = () => {
 
         const ctx = canvas.getContext('2d');
         setContext(ctx);
-        makeRandomArray(200); //array 초기화
+        makeRandomArray(count); // 정렬 데이터 생성
 
         draw(ctx, tempShuffleArr, isDarkMode); //초기화면 그리기
     }, [])
@@ -405,7 +404,7 @@ const Canvas = () => {
                 <FontAwesomeIcon className="play" onClick={onClickPlay} icon={faPlay} /> {/* play button */}
                 <FontAwesomeIcon className="shuffle" onClick={onClickShuffle} icon={faShuffle} /> {/* shuffle button */}
             </div>
-            <canvas ref={canvasRef} width={width} height={height}></canvas>
+            <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight}></canvas>
         </StyledCanvasContainer>
     );
 }

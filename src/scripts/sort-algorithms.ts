@@ -1,32 +1,11 @@
+import { toUnicode } from "punycode";
 import { atom, selector } from "recoil";
 
-//4
-const merge = () => {
-    console.log('4()');
-}
-//5
-const heap = () => {
-    console.log('5()');
-}
-//6
-const quick = () => {
-    console.log('6()');
-}
 
-
-//7
-const radix = () => {
-    console.log('7()');
-}
-//8
-const shell = () => {
-    console.log('8()');
-}
-//9
-const counting = () => {
-    console.log('9()');
-}
-
+// const arraySizeState = atom({
+//     key: 'arraySizeState',
+//     default: 200,
+// })
 
 // DESCRIPTIONS
 const bubbleInfo = [
@@ -108,9 +87,32 @@ const countingInfo = [
 `Counting Sort는 안정 정렬(stable sort)이며, 시간 복잡도는 O(n + k)입니다. 단, 카운트 배열을 위해 O(k)의 공간 복잡도가 필요하며, max 값이 큰 경우에는 카운트 배열이 커져서 공간 복잡도가 높아질 수 있습니다. 또한, 정렬할 수 있는 요소의 범위가 제한적이어야 하며, 음수 요소의 경우에는 적용이 어렵습니다. Counting Sort는 대부분의 경우에 퀵 정렬(Quick Sort)이나 병합 정렬(Merge Sort)과 같은 알고리즘보다 빠른 속도를 보입니다.`
 ]
 
+//Card Component에서 정렬알고리즘 애니메이션의 썸네일을 구현할 배열데이터 생성
+let thumbnail: number[] = [];
+for(let i=1; i<=100; i++) {
+    thumbnail.push(i);
+}
+thumbnail.sort(() => Math.random() - 0.5);
+
+// 썸네일에 사용할 배열데이터는 각 정렬알고리즘이 실행 후 중간지점에서의 데이터를 사용한다.
+
+
+let bubbleThumbnail: number[] = [1, 2, 7, 20, 22, 24, 26, 27, 31, 28, 32, 33, 35, 25, 36, 38, 39, 40, 43, 44, 49, 10, 42, 18, 6, 13, 29, 47, 51, 52, 54, 4, 55, 12, 56, 37, 23, 34, 48, 57, 58, 61, 60, 63, 30, 3, 65, 17, 66, 16, 21, 15, 64, 50, 8, 67, 46, 68, 14, 9, 11, 41, 19, 5, 69, 71, 72, 62, 59, 73, 70, 74, 75, 53, 45, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100];
+let selectionThumbnail: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 98, 67, 56, 71, 93, 92, 78, 81, 51, 90, 52, 84, 91, 83, 55, 59, 65, 72, 76, 73, 49, 48, 88, 89, 85, 53, 94, 95, 80, 79, 62, 77, 69, 50, 63, 87, 99, 60, 68, 66, 58, 82, 97, 54, 57, 70, 64, 75, 74, 100, 61, 86, 47, 96];
+let insertionThumbnail: number[] = [1, 2, 3, 4, 9, 14, 16, 17, 22, 23, 24, 26, 33, 39, 42, 45, 46, 47, 48, 50, 52, 53, 56, 57, 58, 60, 61, 62, 64, 65, 66, 68, 70, 71, 72, 73, 76, 83, 85, 88, 90, 91, 92, 94, 97, 100, 28, 75, 34, 36, 49, 29, 38, 19, 37, 13, 40, 67, 12, 82, 27, 98, 5, 84, 86, 93, 63, 59, 6, 51, 87, 25, 74, 79, 10, 44, 18, 32, 7, 11, 15, 96, 30, 80, 54, 99, 95, 89, 77, 69, 20, 43, 35, 55, 8, 31, 21, 41, 81, 78];
+
+let mergeThumbnail: number[] = [1, 2, 5, 6, 9, 11, 12, 13, 15, 16, 20, 21, 26, 27, 28, 29, 31, 33, 35, 40, 41, 45, 46, 49, 53, 54, 56, 57, 58, 59, 60, 61, 62, 63, 64, 67, 69, 74, 76, 77, 81, 85, 87, 88, 91, 92, 93, 96, 99, 100, 14, 22, 38, 39, 47, 75, 94, 84, 90, 97, 37, 70, 52, 34, 86, 3, 80, 65, 68, 23, 83, 66, 42, 43, 36, 95, 17, 32, 8, 44, 25, 48, 98, 10, 72, 4, 30, 89, 51, 71, 82, 73, 55, 24, 7, 19, 18, 50, 79, 78];
+let heapThumbnail: number[] = [69, 68, 67, 66, 64, 63, 65, 61, 62, 59, 53, 46, 60, 57, 56, 48, 58, 50, 54, 52, 51, 49, 43, 44, 45, 29, 37, 14, 30, 47, 34, 19, 21, 28, 55, 41, 39, 38, 20, 35, 33, 40, 22, 11, 26, 3, 10, 42, 27, 5, 32, 8, 24, 31, 23, 9, 13, 4, 25, 16, 36, 12, 15, 7, 18, 2, 1, 17, 6, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100];
+let quickThumbnail: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 21, 22, 20, 19, 18, 23, 25, 24, 26, 59, 40, 58, 29, 34, 52, 31, 36, 49, 51, 53, 55, 32, 56, 30, 50, 42, 47, 43, 41, 37, 44, 38, 57, 54, 46, 35, 60, 33, 45, 28, 39, 27, 48, 61, 64, 66, 63, 62, 65, 67, 70, 68, 69, 71, 86, 79, 85, 75, 82, 77, 76, 81, 83, 73, 74, 72, 88, 87, 78, 84, 80, 89, 90, 94, 99, 97, 93, 100, 95, 98, 96, 92, 91];
+
+let radixThumbnail: number[];
+let shellThumbnail: number[];
+let countingThumbnail: number[];
+
 
 export const algorithms = [
-    { name: 'Bubble sort', 
+    { name: 'Bubble sort',
+    arr: bubbleThumbnail,
     timeComplex: {
         average: `O(n²)`,
         best: 'O(n)',
@@ -119,6 +121,7 @@ export const algorithms = [
     }, info: bubbleInfo, index: 0},
 
     { name: 'Selection sort',
+    arr: selectionThumbnail,
     timeComplex: {
         average: 'O(n²)',
         best: 'O(n²)',
@@ -127,6 +130,7 @@ export const algorithms = [
     }, info: selectionInfo, index:1},
 
     { name: 'Insertion sort',
+    arr: insertionThumbnail,
     timeComplex: {
         average: 'O(n²)',
         best: 'O(n)',
@@ -137,6 +141,7 @@ export const algorithms = [
 
 
     { name: 'Merge sort', 
+    arr: mergeThumbnail,
     timeComplex: {
         average: 'O(n × log n)',
         best: 'O(n × log n)',
@@ -145,6 +150,7 @@ export const algorithms = [
     }, info: mergeInfo, index: 3},
 
     { name: 'Heap sort',
+    arr: heapThumbnail,
     timeComplex: {
         average: 'O(n × log n)',
         best: 'O(n × log n)',
@@ -153,6 +159,7 @@ export const algorithms = [
     } , info: heapInfo, index: 4},
 
     { name: 'Quick sort',
+    arr: quickThumbnail,
     timeComplex: {
         average: 'O(n × log n)',
         best: 'O(n × log n)',
@@ -163,6 +170,7 @@ export const algorithms = [
 
 
     { name: 'Radix sort',
+    arr: [1,2,3,4,5,6,7,8,9,10],
     timeComplex: {
         average: 'O(d × (n + b))',
         best: 'O(d × (n + b))',
@@ -171,6 +179,7 @@ export const algorithms = [
     }, info: radixInfo, index: 6},
 
     { name: 'Shell sort',
+    arr: [1,2,3,4,5,6,7,8,9,10],
     timeComplex: {
         average: 'Depending on the gap sequence',
         best: 'O(n × log n)',
@@ -179,6 +188,7 @@ export const algorithms = [
     }, info: shellInfo, index:7},
 
     { name: 'Counting sort',
+    arr: [1,2,3,4,5,6,7,8,9,10],
     timeComplex: {
         average: 'O(n+k)',
         best: 'O(n+k)',

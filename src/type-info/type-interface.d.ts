@@ -9,6 +9,7 @@ export interface CardProp {
     index: number;
     data: {
         name: string;
+        arr: number[];
         timeComplex: {
             average: string,
             best: string,
