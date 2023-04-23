@@ -9,12 +9,23 @@ import path from "path";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faVolumeOff, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
 
-
 const StyledHeaderContainer = styled.header`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding: 130px 100px;
+    /* bubble-bar */
+    /* infomation */
+
+    @media (max-width: 1100px){
+        h1 {
+            font-size: x-large;
+        }
+        .bubble-bar, .infomation, input, span {
+            display: none;
+        }
+    }
+    
 `
 
 const StyledHeaderInner = styled.div<PropsType>`
@@ -75,7 +86,7 @@ const Header = (props: PropsType) => {
                 <Link to={"/infomation"}><span className="infomation">Infomation</span></Link>
             </StyledHeaderInner>
 
-            <DarkModeToggle
+            <DarkModeToggle 
             mode={mode}
             dark="Dark"
             light="Light"

@@ -105,13 +105,13 @@ let mergeThumbnail: number[] = [1, 2, 5, 6, 9, 11, 12, 13, 15, 16, 20, 21, 26, 2
 let heapThumbnail: number[] = [69, 68, 67, 66, 64, 63, 65, 61, 62, 59, 53, 46, 60, 57, 56, 48, 58, 50, 54, 52, 51, 49, 43, 44, 45, 29, 37, 14, 30, 47, 34, 19, 21, 28, 55, 41, 39, 38, 20, 35, 33, 40, 22, 11, 26, 3, 10, 42, 27, 5, 32, 8, 24, 31, 23, 9, 13, 4, 25, 16, 36, 12, 15, 7, 18, 2, 1, 17, 6, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100];
 let quickThumbnail: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 21, 22, 20, 19, 18, 23, 25, 24, 26, 59, 40, 58, 29, 34, 52, 31, 36, 49, 51, 53, 55, 32, 56, 30, 50, 42, 47, 43, 41, 37, 44, 38, 57, 54, 46, 35, 60, 33, 45, 28, 39, 27, 48, 61, 64, 66, 63, 62, 65, 67, 70, 68, 69, 71, 86, 79, 85, 75, 82, 77, 76, 81, 83, 73, 74, 72, 88, 87, 78, 84, 80, 89, 90, 94, 99, 97, 93, 100, 95, 98, 96, 92, 91];
 
-let radixThumbnail: number[];
-let shellThumbnail: number[];
-let countingThumbnail: number[];
+let radixThumbnail: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 51, 41, 81, 61, 71, 11, 21, 91, 92, 62, 52, 32, 2, 82, 42, 12, 22, 72, 53, 73, 33, 43, 93, 63, 83, 13, 3, 23, 54, 94, 100, 84, 64, 14, 44, 34, 24, 74, 4, 55, 45, 5, 35, 95, 65, 85, 75, 25, 15, 16, 56, 76, 6, 46, 26, 66, 86, 96, 36, 87, 7, 37, 57, 97, 47, 67, 27, 17, 77, 78, 28, 18, 68, 98, 8, 38, 58, 88, 48, 69, 79, 59, 89, 99, 19, 49, 9, 39, 29];
+let shellThumbnail: number[] = [18, 42, 9, 1, 12, 11, 57, 7, 4, 6, 16, 15, 5, 67, 3, 8, 17, 46, 19, 28, 60, 2, 23, 30, 41, 25, 64, 66, 51, 20, 26, 63, 21, 45, 44, 31, 39, 13, 93, 55, 27, 58, 79, 36, 59, 77, 10, 32, 43, 68, 50, 89, 95, 62, 53, 48, 83, 87, 69, 81, 52, 85, 35, 94, 91, 34, 80, 92, 100, 88, 90, 47, 38, 54, 86, 56, 96, 95, 71, 61, 99, 72, 22, 76, 98, 84, 40, 24, 78, 96, 29, 37, 50, 65, 73, 97, 14, 49, 82, 75];
+let countingThumbnail: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100];
 
 
 export const algorithms = [
-    { name: 'Bubble sort',
+    { name: 'Bubble',
     arr: bubbleThumbnail,
     timeComplex: {
         average: `O(n²)`,
@@ -120,7 +120,7 @@ export const algorithms = [
         space: 'O(1)'
     }, info: bubbleInfo, index: 0},
 
-    { name: 'Selection sort',
+    { name: 'Selection',
     arr: selectionThumbnail,
     timeComplex: {
         average: 'O(n²)',
@@ -129,7 +129,7 @@ export const algorithms = [
         space: 'O(1)'
     }, info: selectionInfo, index:1},
 
-    { name: 'Insertion sort',
+    { name: 'Insertion',
     arr: insertionThumbnail,
     timeComplex: {
         average: 'O(n²)',
@@ -140,7 +140,7 @@ export const algorithms = [
 
 
 
-    { name: 'Merge sort', 
+    { name: 'Merge', 
     arr: mergeThumbnail,
     timeComplex: {
         average: 'O(n × log n)',
@@ -149,7 +149,7 @@ export const algorithms = [
         space: 'O(n)'
     }, info: mergeInfo, index: 3},
 
-    { name: 'Heap sort',
+    { name: 'Heap',
     arr: heapThumbnail,
     timeComplex: {
         average: 'O(n × log n)',
@@ -158,7 +158,7 @@ export const algorithms = [
         space: 'O(1)'
     } , info: heapInfo, index: 4},
 
-    { name: 'Quick sort',
+    { name: 'Quick',
     arr: quickThumbnail,
     timeComplex: {
         average: 'O(n × log n)',
@@ -169,8 +169,8 @@ export const algorithms = [
 
 
 
-    { name: 'Radix sort',
-    arr: [1,2,3,4,5,6,7,8,9,10],
+    { name: 'Radix',
+    arr: radixThumbnail,
     timeComplex: {
         average: 'O(d × (n + b))',
         best: 'O(d × (n + b))',
@@ -178,8 +178,8 @@ export const algorithms = [
         space: 'O(n + 2^d)'
     }, info: radixInfo, index: 6},
 
-    { name: 'Shell sort',
-    arr: [1,2,3,4,5,6,7,8,9,10],
+    { name: 'Shell',
+    arr: shellThumbnail,
     timeComplex: {
         average: 'Depending on the gap sequence',
         best: 'O(n × log n)',
@@ -187,8 +187,8 @@ export const algorithms = [
         space: 'O(1)'
     }, info: shellInfo, index:7},
 
-    { name: 'Counting sort',
-    arr: [1,2,3,4,5,6,7,8,9,10],
+    { name: 'Counting',
+    arr: countingThumbnail,
     timeComplex: {
         average: 'O(n+k)',
         best: 'O(n+k)',

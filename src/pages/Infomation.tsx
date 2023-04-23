@@ -6,7 +6,7 @@ import Header from "../components/Header";
 const StyledInfomation = styled.div`
     padding: 0 100px;
 `
-
+//TODO : 포트폴리오용 페이지인 만큼 개발자의 정보를 담을 수 있어야함 이를 구현해야함.
 const Infomation = () => {
     const location = useLocation();
     return (

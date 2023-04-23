@@ -6,6 +6,7 @@ import { getAlgorithms } from "../scripts/sort-algorithms";
 import { faXmark, faPlay, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+//FIXME 노트북에 배터리를 연결하지 않으면 함수실행이 느려짐 최적화가 필요함
 
 let array: number[] = [];
 let tempShuffleArr: number[] = [];
@@ -27,7 +28,7 @@ const shuffle = (array: number[]) => {
 /*  =============================================== React Component ===============================================  */
 const Canvas = () => {
     const [canvasWidth, canvasHeight] = [800, 600]; // canvas 크기   
-    const count = 100; 
+    const count = 200; 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDarkMode = useRecoilValue(isDark); // 다크모드 감지
     const setIsOpen = useSetRecoilState(isModalOpen); //모달창 오픈 감지변수
@@ -80,11 +81,9 @@ const Canvas = () => {
             for(let j = 0; j < array.length-i-1; j++) {               
                 if(!run) return; //중복실행 방지 및 셔플시 취소
                 if(array[j] > array[j+1]) {
-                    const temp = array[j];
-                    array[j] = array[j+1];
-                    array[j+1] = temp;
+                    swap(array, j, j+1);
                 
-                    await setTimeoutPromise(10);
+                    await setTimeoutPromise(1);
                     draw(context, array, isDarkMode);
                 }
             }
@@ -397,7 +396,7 @@ const Canvas = () => {
     return (
         <StyledCanvasContainer>
             <div className="header-container">
-                <div className="sort-name">{algorithms[index].name.toUpperCase()}</div> {/* 정렬알고리즘 이름  */}
+                <div className="sort-name">{algorithms[index].name.toUpperCase()} SORT</div> {/* 정렬알고리즘 이름  */}
                 <FontAwesomeIcon className="close" onClick={onClickClose} icon={faXmark} /> {/* x button  */}
             </div>
             <div className="func-container">

@@ -6,32 +6,51 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isDark, isModalOpen } from "../state-management/atom";
 
 
-
-
-//media
 const StyledCard = styled.article`
     display: flex;
     flex-direction: column;
-    width: 288px;
-    height: 300px;
-    padding: 0 36px;
+    box-sizing: border-box;
+    width: 300px;
+    height: auto;
+    padding: 0px 38px;
+    margin-bottom: 3rem;
     
+    @media screen and (max-width: 1100px) {
+        .pre-sort {
+            display: none;
+        }
+        canvas {
+            width: 100px;
+            height: 75px;
+        }
+    }
     h3 {
         margin-bottom: 1rem;
-    }
-    .content-container {
-        /* border: 1px solid white;
-        border-radius: 2px; */
-        canvas {
-            width: 100%;    
+        span {
+            display: inline-block;
+            line-height: 1;
         }
+        pre {
+            display: inline-block;
+        }
+    }
+    
+    canvas {
+        width: 150px;
+        height: 100px;
+    }
 
+    .contents-container {
+        //TODO: canvas Transition
         &:hover {
-            
+            h3>span, h3 pre {
+                background-color: ${props => props.theme.oppositeBgColor};
+                color: ${props => props.theme.oppositeColor};
+            }
         }
     }
 `
-
+// TODO Draw and Hover Animation
 const Card = (props: CardProp) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDarkMode = useRecoilValue(isDark); // 다크모드 감지
@@ -58,11 +77,11 @@ const Card = (props: CardProp) => {
                 // 막대의 높이
                 const barHeight = ratio * array[i];
                 const [x, y] = [i * barWidth, height - barHeight];
-                ctx.fillRect(x-1, y, barWidth-1, barHeight);
+                ctx.fillRect(x+i, y, barWidth, barHeight);
             }
         }
     }
-    
+
     //useEffect를 이용해 다크모드 on, off 마다 다시 렌더링 해줌.
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -81,13 +100,16 @@ const Card = (props: CardProp) => {
             setIsOpen(true);
         }
     }, [])
-
+    
     return(
-        <StyledCard onClick={props.onClick}>
-            <div className="content-container">
-                <h3>{props.data.name}</h3>
-                <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight}></canvas>
-            </div>
+        <StyledCard>
+            <div className="contents-container" onClick={props.onClick}>
+                    <h3><span>{props.data.name.toUpperCase()}</span><pre className="pre-sort"> SORT</pre></h3>
+                    <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight}></canvas>
+                </div>
+            {/* <div className="content-container">
+                
+            </div> */}
         </StyledCard>
     );
 }
