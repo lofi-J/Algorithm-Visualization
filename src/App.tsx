@@ -3,16 +3,14 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Infomation from "./pages/Infomation";
 import Home from "./pages/Home"
 import { useRecoilValue } from "recoil";
-import { isDark } from "./state-management/atom";
+import { isDark, isModalOpen } from "./state-management/atom";
 import { darkMode, lightMode } from "./style/theme";
+import Background from "./components/Background";
 
 
 
 const GlobalStyle = createGlobalStyle`
-  /* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-  */
+  
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -89,10 +87,12 @@ const router = createBrowserRouter([
 
 function App() {
   const isDarkTheme = useRecoilValue(isDark);
+  const isModalOpen_ = useRecoilValue(isModalOpen);
   return (
     <>
         <ThemeProvider theme={isDarkTheme ? darkMode : lightMode}>
           <GlobalStyle />
+          {isModalOpen_ ? null : <Background />}
           <RouterProvider router={router} />
         </ThemeProvider>
     </>

@@ -6,39 +6,35 @@ import { getAlgorithms } from "../scripts/sort-algorithms";
 import { faXmark, faPlay, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-//FIXME 노트북에 배터리를 연결하지 않으면 함수실행이 느려짐 최적화가 필요함
-
-let array: number[] = [];
-let tempShuffleArr: number[] = [];
-// 무작위로 섞는 함수(Math.random())
-const shuffle = (array: number[]) => {
-    array.sort(() => Math.random() - 0.5);
-}
-// 무작위로 섞인 number들을 배열에 할당하는 함수(count: 생성할 배열의 길이)
-    const makeRandomArray = (count: number) => {
-    array = [];
-    tempShuffleArr = [];
-    for(let i = 1; i <= count; i++) {
-        tempShuffleArr.push(i);
-    }
-    shuffle(tempShuffleArr);
-}
-
-
 /*  =============================================== React Component ===============================================  */
 const Canvas = () => {
-    const [canvasWidth, canvasHeight] = [800, 600]; // canvas 크기   
-    const count = 200; 
+    let array: number[] = [];
+    let tempShuffleArr: number[] = [];
+    // 무작위로 섞는 함수(Math.random())
+    const shuffle = (array: number[]) => {
+        array.sort(() => Math.random() - 0.5);
+    }
+    // 무작위로 섞인 number들을 배열에 할당하는 함수(count: 생성할 배열의 길이)
+        const makeRandomArray = (count: number) => {
+        array = [];
+        tempShuffleArr = [];
+        for(let i = 1; i <= count; i++) {
+            tempShuffleArr.push(i);
+        }
+        shuffle(tempShuffleArr);
+    }
+    const [canvasWidth, canvasHeight] = [800, 600];
+    const count = 100; 
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const isDarkMode = useRecoilValue(isDark); // 다크모드 감지
-    const setIsOpen = useSetRecoilState(isModalOpen); //모달창 오픈 감지변수
-    const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
+    let context: CanvasRenderingContext2D | null;
+    const isDarkMode = useRecoilValue(isDark);
+    const setIsOpen = useSetRecoilState(isModalOpen);
     let run: boolean = false;
-    // 알고리즘 정보를 담고 있는 배열에 접근
     const algorithms = useRecoilValue(getAlgorithms);
     const index = useRecoilValue(currentSort);
-    // 선택한 알고리즘의 인덱스
     const sortIndex = useRecoilValue(currentSort);
+    // Web Audio API (정렬 사운드 생성)
+    let audioContext: AudioContext | null = null;
     
 
     // HTMLCanvas 그리기 함수
@@ -65,16 +61,40 @@ const Canvas = () => {
         }
     }
     // delay
-    function setTimeoutPromise(ms: number){
+    const setTimeoutPromise = (ms: number) => {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
-    //swap
+    // swap
     const swap = (array: number[], i: number, j: number) => {
         const temp = array[i];
         array[i] = array[j];
         array[j] = temp;
     }
-    
+
+    // sorting sound make function
+    const playSound = (frequency: number, time: number) => {
+        if(!audioContext) return;
+        const oscillator = audioContext.createOscillator();
+        oscillator!.type = "triangle";
+        oscillator.frequency.value = 24.5 * frequency;
+
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.025;
+        // gainNode.gain.linearRampToValueAtTime(0, 200);
+
+        //connect 
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.start();
+
+        setTimeout(() => {
+            oscillator.stop();
+            oscillator.disconnect();
+            gainNode.disconnect();
+        }, audioContext.currentTime + time);
+    }
+
     /* 정렬 및 시각화 함수들 */    
     const bubble = async () => {
         for(let i = 0; i < array.length; i++) {
@@ -82,10 +102,10 @@ const Canvas = () => {
                 if(!run) return; //중복실행 방지 및 셔플시 취소
                 if(array[j] > array[j+1]) {
                     swap(array, j, j+1);
-                
-                    await setTimeoutPromise(1);
-                    draw(context, array, isDarkMode);
                 }
+                await setTimeoutPromise(0);
+                playSound(array[j], 0);
+                draw(context, array, isDarkMode);
             }
         }
     }
@@ -98,14 +118,18 @@ const Canvas = () => {
                 if(array[min] > array[j]) {
                     min = j;
                     await setTimeoutPromise(10);
+                    playSound(array[min], 10);
                     draw(context, array, isDarkMode);
                 }
             }
             if(i != min) {
                 [array[i], array[min]] = [array[min], array[i]];     
+                playSound(array[min], 10);
+                draw(context, array, isDarkMode);
                 
             }
             await setTimeoutPromise(10);
+            playSound(array[min], 10);
             draw(context, array, isDarkMode);
         }
     }
@@ -123,10 +147,12 @@ const Canvas = () => {
                 array[j+1] = array[j];
                 j = j-1;
                 await setTimeoutPromise(10);
+                playSound(array[j+1], 10);
                 draw(context, array, isDarkMode);
             } 
             array[j+1] = key;
             await setTimeoutPromise(10);
+            playSound(array[j+1], 10);
             draw(context, array, isDarkMode);
         }
     }
@@ -140,6 +166,7 @@ const Canvas = () => {
             await mergeSort(array, start, mid);
             await mergeSort(array, mid+1, end);
             await merge(array, start, mid, end);
+            playSound(array[end], 10)
             draw(context, array, isDarkMode);
         }
         
@@ -198,7 +225,6 @@ const Canvas = () => {
             swap(array, 0, lastIndex);
             heapify(array, lastIndex, 0);
             lastIndex--;
-            
             draw(context, array, isDarkMode);
         }
         function heapify(array: number[], range: number, index: number) {
@@ -213,8 +239,10 @@ const Canvas = () => {
             if(largest != index) {
                 swap(array, index, largest);
                 heapify(array, range, largest);
+                playSound(array[largest], 0);
             }
             setTimeoutPromise(10);
+            playSound(array[largest], 10);
             draw(context, array, isDarkMode);
         }
     }
@@ -241,10 +269,12 @@ const Canvas = () => {
                     i++;
                     swap(array, i, j);
                     await setTimeoutPromise(10);
+                    playSound(array[i], 10);
                     draw(context, array, isDarkMode);
                 }
             }
             swap(array, i + 1, end);
+            playSound(array[end], 10);
             draw(context, array, isDarkMode);
             return (i+1);
         }
@@ -276,6 +306,7 @@ const Canvas = () => {
                 for (let l = 0; l < bucket.length; l++) {
                     await setTimeoutPromise(20);
                     arr[index++] = bucket[l];
+                    playSound(bucket[l], 20);
                     draw(context, array, isDarkMode);
                 }
             }
@@ -298,6 +329,7 @@ const Canvas = () => {
                 }
                 arr[j] = temp;
                 await setTimeoutPromise(10);
+                playSound(arr[j], 10);
                 draw(context, array, isDarkMode);
             }
         }
@@ -320,6 +352,7 @@ const Canvas = () => {
                     if(!run) return;
                     await setTimeoutPromise(10);
                     array.push(j);
+                    playSound(array.length, 10);
                     draw(context, array, isDarkMode);
                 }
             }
@@ -330,14 +363,19 @@ const Canvas = () => {
 
     // canvas가 mount되면 context 초기화 and 배열 할당
     useEffect(() => {
+        audioContext = new AudioContext();
         const canvas = canvasRef.current;
         if (!canvas) { return }
 
-        const ctx = canvas.getContext('2d');
-        setContext(ctx);
+        context = canvas.getContext('2d');
         makeRandomArray(count); // 정렬 데이터 생성
+        draw(context, tempShuffleArr, isDarkMode); //초기화면 그리기
 
-        draw(ctx, tempShuffleArr, isDarkMode); //초기화면 그리기
+        // Canvas가 unmount되면 audioContext 해제
+        return() => {
+            run = false;
+            audioContext = null;
+        }
     }, [])
     
     // x button click
@@ -353,9 +391,7 @@ const Canvas = () => {
     }
     // play button click
     const onClickPlay = async () => {
-        if(run) {
-            return;
-        }
+        if(run) return;
         run = true;
         array = tempShuffleArr;
         switch(sortIndex) {
@@ -392,7 +428,6 @@ const Canvas = () => {
         run = false;
     }
 
-
     return (
         <StyledCanvasContainer>
             <div className="header-container">
@@ -426,7 +461,7 @@ const StyledCanvasContainer = styled.div`
     svg {
         font-size: 1.5rem;
         &:hover {
-            color: red;
+            color: ${props => props.theme.accent};
         }
     }
     .func-container {

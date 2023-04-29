@@ -74,8 +74,11 @@ interface PropsType {
     path: string
 }
 
+
 const Header = (props: PropsType) => {
-    const [mode, setMode] = useState<Mode | undefined>('dark');
+    const currentMode = useRecoilValue(isDark);
+    const mode_ = currentMode === true ? 'dark' : 'light';
+    const [mode, setMode] = useState<Mode | undefined>(mode_);
     const setRecoilFn: (mode: boolean) => void = useSetRecoilState(isDark);
     
     return(

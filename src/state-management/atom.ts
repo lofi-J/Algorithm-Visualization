@@ -18,6 +18,5 @@ export const currentSort = atom({
 
 export const isModalOpen = atom({
     key: 'isModalOpen',
-    // default: true,
     default: false,
 })

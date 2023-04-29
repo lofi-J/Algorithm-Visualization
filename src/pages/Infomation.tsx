@@ -1,20 +1,24 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 
 const StyledInfomation = styled.div`
     padding: 0 100px;
 `
-//TODO : 포트폴리오용 페이지인 만큼 개발자의 정보를 담을 수 있어야함 이를 구현해야함.
+//TODO : 현재 구성한 페이지 설명 및 사용 기술 스택 정리
 const Infomation = () => {
     const location = useLocation();
     return (
         <>
             <Header path={location.pathname}/>
             <StyledInfomation>
-                <h1>Infomation Page</h1>
+                <span>사용한 기술 스택</span>
+                <span>TypeScript</span>
+                <span>React</span>
             </StyledInfomation>
+            <Footer />
         </>
     );
 }

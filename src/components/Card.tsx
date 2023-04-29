@@ -1,10 +1,9 @@
 import styled from "styled-components";
-import { CardProp } from "../type-info/type-interface";
-import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isDark, isModalOpen } from "../state-management/atom";
-
+import blopSound from "../audio/blop.mp3";
+import useSound from "use-sound";
 
 const StyledCard = styled.article`
     display: flex;
@@ -13,7 +12,7 @@ const StyledCard = styled.article`
     width: 300px;
     height: auto;
     padding: 0px 38px;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     
     @media screen and (max-width: 1100px) {
         .pre-sort {
@@ -25,7 +24,9 @@ const StyledCard = styled.article`
         }
     }
     h3 {
+        display: inline-block;
         margin-bottom: 1rem;
+        
         span {
             display: inline-block;
             line-height: 1;
@@ -36,26 +37,41 @@ const StyledCard = styled.article`
     }
     
     canvas {
-        width: 150px;
-        height: 100px;
+        width: 80%;
     }
 
     .contents-container {
-        //TODO: canvas Transition
+        display: inline-block;
         &:hover {
-            h3>span, h3 pre {
-                background-color: ${props => props.theme.oppositeBgColor};
-                color: ${props => props.theme.oppositeColor};
+            cursor: pointer;
+            span, pre {
+                background-color: ${p => p.theme.oppositeBgColor};
+                color: ${p => p.theme.oppositeColor};
             }
         }
     }
 `
-// TODO Draw and Hover Animation
+interface CardProp {
+    onClick: () => void;
+    data: {
+        name: string;
+        arr: number[];
+        timeComplex: {
+            average: string,
+            best: string,
+            worst: string,
+            space: string
+        }
+    }
+}
+
 const Card = (props: CardProp) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDarkMode = useRecoilValue(isDark); // 다크모드 감지
+    const setIsOpen = useSetRecoilState(isModalOpen);
     const [canvasWidth, canvasHeight] = [800, 600]; // canvas 크기
     let array: number[] = props.data.arr;
+    const [isMouseOver, setIsMouseOver] = useState(false);
 
     // HTMLCanvas 그리기 함수
     const draw = (ctx: CanvasRenderingContext2D | null, arr: number[], isDark: boolean) => {
@@ -90,26 +106,24 @@ const Card = (props: CardProp) => {
         const ctx = canvas.getContext('2d');
         draw(ctx, array, isDarkMode);
     }, [isDarkMode])
+
     
-    const setIsOpen = useSetRecoilState(isModalOpen);
-    const currPath = useLocation().pathname;
-    const isDetailNow = currPath.includes('/detail')
+    const [playHover] = useSound(blopSound, {
+        volume: 0.2,
+    });
     
-    useEffect(() => {
-        if(isDetailNow) {
-            setIsOpen(true);
-        }
-    }, [])
-    
+    const onMouseEnter = () => {
+        playHover();
+    }
+
     return(
         <StyledCard>
-            <div className="contents-container" onClick={props.onClick}>
-                    <h3><span>{props.data.name.toUpperCase()}</span><pre className="pre-sort"> SORT</pre></h3>
-                    <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight}></canvas>
-                </div>
-            {/* <div className="content-container">
-                
-            </div> */}
+            <div className="contents-container" onClick={props.onClick} onMouseEnter={onMouseEnter} >
+                <h3>
+                    <span>{props.data.name.toUpperCase()}</span><pre className="pre-sort">  SORT</pre>
+                </h3>
+                <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} ></canvas>
+            </div>
         </StyledCard>
     );
 }

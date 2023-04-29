@@ -1,29 +1,32 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { currentSort, isModalOpen } from "../state-management/atom";
 import Card from "../components/Card"
 import { useEffect } from "react";
 import Modal from "../components/Modal";
 import { getAlgorithms } from "../scripts/sort-algorithms";
+import useClickSound from "../audio/useClickSound";
+import Footer from "../components/Footer";
+
 
 
 const StyledHome = styled.main`
+    
     .flex-container {
         display: flex; 
-        box-sizing: border-box;
         flex-direction: column;
+        box-sizing: border-box;
         text-align: center;
-        margin: 0 80px;
-        padding: 0 64px;
+        padding: 0 10%;
 
-        //level1 윗 줄
         .card-container {
             display: flex;
             flex-direction: row;
             justify-content: space-around;
             box-sizing: border-box;
+            margin: 2.5rem 0;
         }
     }
 `
@@ -42,14 +45,16 @@ const Home = () => {
     const level2 = algorithms.slice(3, 6);
     const level3 = algorithms.slice(6, 9);
 
-    // modal state hook 
-    // const [isOpen, setIsOpen] = useState<boolean>(true);
     const isOpen = useRecoilValue(isModalOpen);
     const setIsOpen = useSetRecoilState(isModalOpen);
+    
+    const [click] = useClickSound();
+    
     // toggle modal state
     const onClickToggleModal = (index: number) => {
         setIsOpen(!isOpen); //modal open
         setCurrentSort(index);
+        click();
     }
     // about scroll
     useEffect(() => {
@@ -60,7 +65,6 @@ const Home = () => {
         <div>
             <Header path={location.pathname}/>
 
-            {/* modal(Detail.tsx) */}
             {
                 isOpen && <Modal />
             }
@@ -73,7 +77,6 @@ const Home = () => {
                             level1.map((algorithm)=>(
                                 <Card
                                 onClick={() => {onClickToggleModal(algorithm.index)}}
-                                index={algorithm.index}
                                 key={algorithm.name}
                                 data={algorithm}
                                 />
@@ -86,7 +89,6 @@ const Home = () => {
                             level2.map((algorithm)=>(
                                 <Card 
                                 onClick={() => {onClickToggleModal(algorithm.index)}}
-                                index={algorithm.index}
                                 key={algorithm.name}
                                 data={algorithm}
                                 />
@@ -99,7 +101,6 @@ const Home = () => {
                             level3.map((algorithm)=>(
                                 <Card 
                                 onClick={() => {onClickToggleModal(algorithm.index)}}
-                                index={algorithm.index}
                                 key={algorithm.name}
                                 data={algorithm}                               
                                 />
@@ -107,6 +108,8 @@ const Home = () => {
                         }
                     </div>
                 </div>
+
+                <Footer />
             </StyledHome>
         </div>
     );

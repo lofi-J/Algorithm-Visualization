@@ -1,5 +1,7 @@
 ## Description
-HTML Canvas를 이용한 기초적인 정렬알고리즘들의 시각화작업물
+Visualizations of Basic Sorting Algorithms using HTML Canvas
+(HTML Canvas를 이용한 기초적인 정렬알고리즘 시각화)
+
 
 ## Environment
  - MacOS Ventura
@@ -11,7 +13,6 @@ HTML Canvas를 이용한 기초적인 정렬알고리즘들의 시각화작업�
  - Styled-components v5.3.9
  - React-Router v6
  - tone.js
- - three.js
  - recoil v0.7.7
 
 ## Language
