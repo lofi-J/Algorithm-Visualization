@@ -19,7 +19,6 @@ const StyledHeaderContainer = styled.header`
             display: none;
         }
     }
-    
 `
 
 const StyledHeaderInner = styled.div<PropsType>`
