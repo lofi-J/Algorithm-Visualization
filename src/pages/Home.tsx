@@ -7,7 +7,7 @@ import Card from "../components/Card"
 import { useEffect } from "react";
 import Modal from "../components/Modal";
 import { getAlgorithms } from "../scripts/sort-algorithms";
-import useClickSound from "../audio/useClickSound";
+import useClickSound from "../scripts/useClickSound";
 import Footer from "../components/Footer";
 
 

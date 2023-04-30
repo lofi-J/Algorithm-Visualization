@@ -64,7 +64,7 @@ table {
 	border-spacing: 0;
 }
 body {
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Serif", serif;
   background-color: ${props => props.theme.bgColor};
   color: ${props => props.theme.color};
 }

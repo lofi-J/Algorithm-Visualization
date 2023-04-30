@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isDark, isModalOpen } from "../state-management/atom";
-import blopSound from "../audio/blop.mp3";
+import blopSound from "../assets/audio/blop.mp3";
 import useSound from "use-sound";
 
 const StyledCard = styled.article`
@@ -71,7 +71,6 @@ const Card = (props: CardProp) => {
     const setIsOpen = useSetRecoilState(isModalOpen);
     const [canvasWidth, canvasHeight] = [800, 600]; // canvas 크기
     let array: number[] = props.data.arr;
-    const [isMouseOver, setIsMouseOver] = useState(false);
 
     // HTMLCanvas 그리기 함수
     const draw = (ctx: CanvasRenderingContext2D | null, arr: number[], isDark: boolean) => {

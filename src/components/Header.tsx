@@ -1,21 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { DarkModeToggle, Mode } from "@anatoliygatt/dark-mode-toggle";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isDark, isInfomation } from "../state-management/atom";
-import { useLocation } from "react-router-dom";
-import path from "path";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faVolumeOff, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
+import { isDark } from "../state-management/atom";
 
 const StyledHeaderContainer = styled.header`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding: 130px 100px;
-    /* bubble-bar */
-    /* infomation */
 
     @media (max-width: 1100px){
         h1 {
@@ -32,8 +26,6 @@ const StyledHeaderInner = styled.div<PropsType>`
     display: flex;
     flex-direction: row;
     h1 {
-        font-family: 'Noto Sans KR', sans-serif;
-        font-family: 'Noto Serif', serif;
         position: relative;
         &:hover {
             ::after{opacity: 1}

@@ -11,9 +11,10 @@ Visualizations of Basic Sorting Algorithms using HTML Canvas
 ## The used library
  - React v18.2
  - Styled-components v5.3.9
- - React-Router v6
- - tone.js
+ - React-Router-dom v6.4
  - recoil v0.7.7
+ - use-sound v4.0.1
 
 ## Language
  - TypeScript
+ - HTML

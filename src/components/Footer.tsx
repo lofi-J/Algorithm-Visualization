@@ -7,7 +7,6 @@ const StyledFooter = styled.div`
     padding: 0 10%;
     padding-top: 5rem;
     padding-bottom: 10rem;
-    font-family: "Noto Serif", serif;
     
     display: flex;
     flex-direction: row;
