@@ -69,12 +69,12 @@ const Footer = () => {
                 <span className="footer-title">Contacts</span>
 
                 <span className="email footer-content">jsj2505@gmail.com</span>
-                <a href="https://github.com/lofi-J" rel="license" target={"_blank"}><span className="email footer-content">github.com/lofi-J</span></a>
+                <a href="https://github.com/lofi-J" rel="noreferrer" target={"_blank"}><span className="email footer-content">github.com/lofi-J</span></a>
             </div>
             <div>
                 <span className="footer-title">Reference</span>
                 
-                <a href="https://en.wikipedia.org/wiki/Sorting_algorithm" rel="external" target={"_blank"}><span className="footer-content">Wikipedia</span></a>                
+                <a href="https://en.wikipedia.org/wiki/Sorting_algorithm" rel="noreferrer" target={"_blank"}><span className="footer-content">Wikipedia</span></a>                
             </div>
             <span className="up-btn" onClick={onClick}>^</span>
         </StyledFooter>

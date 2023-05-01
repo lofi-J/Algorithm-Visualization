@@ -67,6 +67,7 @@ interface CardProp {
 
 const Card = (props: CardProp) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const contextRef = useRef<CanvasRenderingContext2D | null>(null);
     const isDarkMode = useRecoilValue(isDark); // 다크모드 감지
     // const setIsOpen = useSetRecoilState(isModalOpen);
     const [canvasWidth, canvasHeight] = [800, 600]; // canvas 크기
@@ -96,17 +97,7 @@ const Card = (props: CardProp) => {
             }
         }
     }
-
-    //useEffect를 이용해 다크모드 on, off 마다 다시 렌더링 해줌.
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if(!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        draw(ctx, array, isDarkMode);
-    }, [isDarkMode])
-
-    
+ 
     const [playHover] = useSound(blopSound, {
         volume: 0.2,
     });
@@ -114,6 +105,17 @@ const Card = (props: CardProp) => {
     const onMouseEnter = () => {
         playHover();
     }
+
+    //useEffect를 이용해 다크모드 on, off 마다 다시 렌더링 해줌.
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if(!canvas) return;
+
+        contextRef.current = canvas.getContext('2d');
+    }, [isDarkMode])
+    setTimeout(() => {
+        draw(contextRef.current, array, isDarkMode);
+    }, 50)
 
     return(
         <StyledCard>

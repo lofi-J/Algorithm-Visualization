@@ -23,36 +23,36 @@ const Canvas = () => {
     }
     const [canvasWidth, canvasHeight] = [1200, 800];
     const [count, setCount] = useState(100);
-    let run: boolean = false;
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    let context: CanvasRenderingContext2D | null;
+    // let run: boolean = false;
+    const runRef = useRef<boolean>(false);
     const isDarkMode = useRecoilValue(isDark);
     const setIsOpen = useSetRecoilState(isModalOpen);
     const algorithms = useRecoilValue(getAlgorithms);
     const index = useRecoilValue(currentSort);
     const sortIndex = useRecoilValue(currentSort);
     // Web Audio API (정렬 사운드 생성)
-    let audioContext: AudioContext | null = null;
+    const audioContext: AudioContext | null = new AudioContext();
+    // let context: CanvasRenderingContext2D | null;
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
 
     // HTMLCanvas 그리기 함수
     const draw = (ctx: CanvasRenderingContext2D | null, arr: number[]) => {
-        const array = arr;
         // canvas 크기
         const [width, height] = [canvasWidth, canvasHeight];
         // 배열의 최댓값
-        const maxValue = Math.max(...array);
+        const maxValue = Math.max(...arr);
         // 막대의 width
-        const barWidth = (width / array.length);
-
+        const barWidth = (width / arr.length);
         if (ctx !== null) {
             ctx.fillStyle = isDarkMode ? 'white' : 'black';
             ctx.clearRect(0, 0, width, height); //새로 그리기전 화면 비우기
-            for (let i = 0; i < array.length; i++) {
+            for (let i = 0; i < arr.length; i++) {
                 // 높이를 계산할 비율을 계산
                 const ratio = height / maxValue;
                 // 막대의 높이
-                const barHeight = ratio * array[i];
+                const barHeight = ratio * arr[i];
                 const [x, y] = [i * barWidth, height - barHeight];
                 ctx.fillRect(x - 1, y, barWidth - 1, barHeight);
             }
@@ -68,7 +68,7 @@ const Canvas = () => {
         array[i] = array[j];
         array[j] = temp;
     }
-
+    
     // sorting sound make function
     const playSound = (frequency: number, time: number) => {
         if (!audioContext) return;
@@ -97,13 +97,13 @@ const Canvas = () => {
     const bubble = async () => {
         for (let i = 0; i < array.length; i++) {
             for (let j = 0; j < array.length - i - 1; j++) {
-                if (!run) return; //중복실행 방지 및 셔플시 취소
+                if (!runRef.current) return; //중복실행 방지 및 셔플시 취소
                 if (array[j] > array[j + 1]) {
                     swap(array, j, j + 1);
                 }
                 await setTimeoutPromise(10);
                 playSound(array[j], 10);
-                draw(context, array);
+                draw(contextRef.current, array);
             }
         }
     }
@@ -112,23 +112,23 @@ const Canvas = () => {
         for (let i = 0; i < array.length; i++) {
             let min = i;
             for (let j = i + 1; j < array.length; j++) {
-                if (!run) return; // 중복실행 방지 및 셔플시 취소
+                if (!runRef.current) return; // 중복실행 방지 및 셔플시 취소
                 if (array[min] > array[j]) {
                     min = j;
                     await setTimeoutPromise(10);
                     playSound(array[min], 10);
-                    draw(context, array);
+                    draw(contextRef.current, array);
                 }
             }
             if (i !== min) {
                 [array[i], array[min]] = [array[min], array[i]];
                 playSound(array[min], 10);
-                draw(context, array);
+                draw(contextRef.current, array);
 
             }
             await setTimeoutPromise(10);
             playSound(array[min], 10);
-            draw(context, array);
+            draw(contextRef.current, array);
         }
     }
     //3
@@ -139,24 +139,24 @@ const Canvas = () => {
             j = i - 1;
 
             while (j >= 0 && array[j] > key) {
-                if (!run) return; //중복실행 방지 및 셔플시 취소
+                if (!runRef.current) return; //중복실행 방지 및 셔플시 취소
 
                 array[j + 1] = array[j];
                 j = j - 1;
                 await setTimeoutPromise(10);
                 playSound(array[j + 1], 10);
-                draw(context, array);
+                draw(contextRef.current, array);
             }
             array[j + 1] = key;
             await setTimeoutPromise(10);
             playSound(array[j + 1], 10);
-            draw(context, array);
+            draw(contextRef.current, array);
         }
     }
     //4
     const temp = new Array<number>(count);
     async function mergeSort(array: number[], start: number, end: number) {
-        if (!run) return;
+        if (!runRef.current) return;
         await setTimeoutPromise(10);
         if (start < end) {
             const mid = (start + end) >> 1;
@@ -164,11 +164,11 @@ const Canvas = () => {
             await mergeSort(array, mid + 1, end);
             await merge(array, start, mid, end);
             playSound(array[end], 10)
-            draw(context, array);
+            draw(contextRef.current, array);
         }
 
         async function merge(array: number[], start: number, mid: number, end: number) {
-            if (!run) return;
+            if (!runRef) return;
             await setTimeoutPromise(10);
             let index = start;
             let leftIndex = start;
@@ -209,22 +209,22 @@ const Canvas = () => {
         let lastIndex = len - 1;
         //build heap
         for (let i = Math.floor(len / 2) - 1; i >= 0; i--) {
-            if (!run) return; // 중복실행 방지 및 셔플시 취소
+            if (!runRef.current) return; // 중복실행 방지 및 셔플시 취소
             await setTimeoutPromise(10);
             heapify(array, len, i);
-            draw(context, array);
+            draw(contextRef.current, array);
         }
         //sort
         while (lastIndex > 0) {
-            if (!run) return; // 중복실행 방지 및 셔플시 취소
+            if (!runRef.current) return; // 중복실행 방지 및 셔플시 취소
             await setTimeoutPromise(10);
             swap(array, 0, lastIndex);
             heapify(array, lastIndex, 0);
             lastIndex--;
-            draw(context, array);
+            draw(contextRef.current, array);
         }
         function heapify(array: number[], range: number, index: number) {
-            if (!run) return; // 중복실행 방지 및 셔플시 취소
+            if (!runRef.current) return; // 중복실행 방지 및 셔플시 취소
             let largest = index;
             const l = (index * 2) + 1;
             const r = (index * 2) + 2;
@@ -237,16 +237,16 @@ const Canvas = () => {
                 heapify(array, range, largest);
                 setTimeoutPromise(10);
                 playSound(array[largest], 10);
-                draw(context, array);
+                draw(contextRef.current, array);
             }
             setTimeoutPromise(10);
             playSound(array[largest], 10);
-            draw(context, array);
+            draw(contextRef.current, array);
         }
     }
     //6
     async function quickSort(array: number[], start: number, end: number) {
-        if (!run) return; //중복실행 방지 및 셔플시 취소
+        if (!runRef.current) return; //중복실행 방지 및 셔플시 취소
         if (start < end) {
             let pivot = await partition(array, start, end);
 
@@ -255,25 +255,25 @@ const Canvas = () => {
             await setTimeoutPromise(10);
             await quickSort(array, pivot + 1, end);
 
-            draw(context, array);
+            draw(contextRef.current, array);
         }
         async function partition(array: number[], start: number, end: number) {
-            if (!run) return 0; //중복실행 방지 및 셔플시 취소
+            if (!runRef.current) return 0; //중복실행 방지 및 셔플시 취소
             let pivot = array[end];
             let i = (start - 1);
             for (let j = start; j <= end - 1; j++) {
-                if (!run) return 0; //중복실행 방지 및 셔플시 취소
+                if (!runRef.current) return 0; //중복실행 방지 및 셔플시 취소
                 if (array[j] < pivot) {
                     i++;
                     swap(array, i, j);
                     await setTimeoutPromise(10);
                     playSound(array[i], 10);
-                    draw(context, array);
+                    draw(contextRef.current, array);
                 }
             }
             swap(array, i + 1, end);
             playSound(array[end], 10);
-            draw(context, array);
+            draw(contextRef.current, array);
             return (i + 1);
         }
     }
@@ -305,10 +305,10 @@ const Canvas = () => {
                     await setTimeoutPromise(10);
                     arr[index++] = bucket[l];
                     playSound(bucket[l], 10);
-                    draw(context, array);
+                    draw(contextRef.current, array);
                 }
             }
-            draw(context, array);
+            draw(contextRef.current, array);
             buckets = Array.from({ length: 10 }, () => []);
         }
     }
@@ -320,15 +320,15 @@ const Canvas = () => {
                 let temp = arr[i];
                 let j;
                 for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-                    if (!run) return;
+                    if (!runRef.current) return;
                     arr[j] = arr[j - gap];
                     await setTimeoutPromise(10);
-                    draw(context, array);
+                    draw(contextRef.current, array);
                 }
                 arr[j] = temp;
                 await setTimeoutPromise(10);
                 playSound(arr[j], 10);
-                draw(context, array);
+                draw(contextRef.current, array);
             }
         }
     }
@@ -339,61 +339,42 @@ const Canvas = () => {
         countArr.fill(0);
 
         for (let i = 0; i < arr.length; i++) {
-            if (!run) return;
+            if (!runRef.current) return;
             countArr[arr[i]]++;
         }
         array = [];
-        draw(context, array);
+        draw(contextRef.current, array);
         for (let j = 0; j < countArr.length; j++) {
             if (countArr[j] !== 0) {
                 for (let k = 0; k < countArr[j]; k++) {
-                    if (!run) return;
+                    if (!runRef.current) return;
                     await setTimeoutPromise(10);
                     array.push(j);
                     playSound(array.length, 10);
-                    draw(context, array);
+                    draw(contextRef.current, array);
                 }
             }
         }
-        draw(context, array);
+        draw(contextRef.current, array);
     }
-
-
-    // canvas가 mount되면 context 초기화 and 배열 할당
-    useEffect(() => {
-        audioContext = new AudioContext();
-        if(!audioContext) {console.log('audio context null')}
-        const canvas = canvasRef.current;
-        if (!canvas) { return }
-
-        context = canvas.getContext('2d');
-        makeRandomArray(count); // 정렬 데이터 생성
-        draw(context, array); //초기화면 그리기
-
-        // Canvas가 unmount되면 audioContext 해제
-        return () => {
-            run = false;
-            audioContext = null;
-        }
-    }, [count, audioContext])
-
+    
+    
     // x button click
     const onClickClose = () => {
-        run = false;
+        runRef.current = false
         setIsOpen(false);
     }
     // shuffle button click
     const onClickShuffle = () => {
-        run = false;
+        runRef.current = false;
         shuffle(array);
-        draw(context, array);
+        draw(contextRef.current, array);
     }
     // play button click
     const onClickPlay = async () => {
-        if (run) return;
-        run = true;
-        if(!audioContext) console.log('audio context error')
-
+        const isRun = runRef.current;
+        if(isRun) return;
+        runRef.current = true;
         switch (sortIndex) {
             case 0:
                 await bubble();
@@ -425,8 +406,25 @@ const Canvas = () => {
             default:
                 console.error('아직 정렬알고리즘이 할당되지 않음');
         }
-        run = false;
+        runRef.current = false;
     }
+
+    // canvas가 mount되면 context 초기화 and 배열 할당
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) { return }
+    
+        contextRef.current = canvas.getContext('2d');
+        return () => {
+            runRef.current = false;
+        }
+    }, [count, runRef])
+
+    //initial
+    makeRandomArray(count); //정렬 데이터 생성
+    setTimeout(() => {
+        draw(contextRef.current, array);
+    }, 50)
 
     return (
         <StyledCanvasContainer>
@@ -448,7 +446,7 @@ const Canvas = () => {
                             onChange={event => {
                                 setCount(event.target.valueAsNumber);
                                 makeRandomArray(count);
-                                draw(context, array);
+                                draw(contextRef.current, array);
                             }}
                         />
                     </StyledSlider>
