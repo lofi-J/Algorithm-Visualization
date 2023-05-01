@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { useEffect, useRef, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isDark, isModalOpen } from "../state-management/atom";
+import { useEffect, useRef } from "react";
+import { useRecoilValue } from "recoil";
+import { isDark } from "../state-management/atom";
 import blopSound from "../assets/audio/blop.mp3";
 import useSound from "use-sound";
 
@@ -68,7 +68,7 @@ interface CardProp {
 const Card = (props: CardProp) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDarkMode = useRecoilValue(isDark); // 다크모드 감지
-    const setIsOpen = useSetRecoilState(isModalOpen);
+    // const setIsOpen = useSetRecoilState(isModalOpen);
     const [canvasWidth, canvasHeight] = [800, 600]; // canvas 크기
     let array: number[] = props.data.arr;
 

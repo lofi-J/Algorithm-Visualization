@@ -86,13 +86,13 @@ const Infomation = () => {
                     <h1>References</h1>
                     <ul className="link-ul">
                         <li>
-                            <a href="https://ko.wikipedia.org/wiki/%EC%A0%95%EB%A0%AC_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98" target={"_blank"}>
+                            <a href="https://ko.wikipedia.org/wiki/%EC%A0%95%EB%A0%AC_%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98" rel="external" target={"_blank"}>
                                 <FontAwesomeIcon icon={faWikipediaW} /> <p>정렬_알고리즘</p>
                             </a>
                         </li>
                     
                         <li>
-                            <a href="https://www.youtube.com/watch?v=kPRA0W1kECg&t=140s" target="_blank">
+                            <a href="https://www.youtube.com/watch?v=kPRA0W1kECg&t=140s" rel="external" target="_blank">
                                 <FontAwesomeIcon icon={faYoutube} /> <p>Timo Bingmann</p> 
                             </a>
                         </li>
@@ -103,7 +103,7 @@ const Infomation = () => {
                     <h1>Project link</h1>
                     <ul className="link-ul">
                         <li>
-                            <a href="https://github.com/lofi-J/Algorithm-Visualization" target="_blank">
+                            <a href="https://github.com/lofi-J/Algorithm-Visualization" rel="license" target="_blank">
                                 <FontAwesomeIcon icon={faGithub} /> <p>Algorithm-Visualization</p> 
                             </a>
                         </li>

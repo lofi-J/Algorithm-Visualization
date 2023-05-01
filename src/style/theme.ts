@@ -1,4 +1,3 @@
-import { faRightToBracket } from "@fortawesome/free-solid-svg-icons"
 import { DefaultTheme } from "styled-components"
 
 export const darkMode: DefaultTheme = {

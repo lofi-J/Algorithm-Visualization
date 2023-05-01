@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { currentSort, isModalOpen } from "../state-management/atom";
 import Card from "../components/Card"
 import { useEffect } from "react";

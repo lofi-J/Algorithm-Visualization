@@ -120,7 +120,7 @@ const Canvas = () => {
                     draw(context, array);
                 }
             }
-            if (i != min) {
+            if (i !== min) {
                 [array[i], array[min]] = [array[min], array[i]];
                 playSound(array[min], 10);
                 draw(context, array);
@@ -232,7 +232,7 @@ const Canvas = () => {
             if (l < range && array[largest] < array[l]) { largest = l; }
             if (r < range && array[largest] < array[r]) { largest = r; }
 
-            if (largest != index) {
+            if (largest !== index) {
                 swap(array, index, largest);
                 heapify(array, range, largest);
                 setTimeoutPromise(10);
