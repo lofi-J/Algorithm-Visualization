@@ -52,6 +52,31 @@ const StyledFooter = styled.div`
         }
     }
 
+    @media screen and (max-width: 845px) {
+        padding-top: .5rem;
+        .footer-title {
+            font-size: 20px;
+            margin-bottom: 18px;
+        }
+        .footer-content {
+            font-size: 16px;
+            
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        padding-top: 1rem;
+        .footer-title { 
+            font-size: 16px; 
+            margin-bottom: 1rem;
+        }  
+        .name { font-size: 12px; }
+        .footer-contacts, .footer-reference { display: none; }
+        
+        .up-btn {
+            line-height: 1.5;
+        }
+    }
 `
 
 const Footer = () => {
@@ -65,13 +90,13 @@ const Footer = () => {
 
                 <span className="name footer-content">Jo SeongJun</span>
             </div>
-            <div>
+            <div className="footer-contacts">
                 <span className="footer-title">Contacts</span>
 
                 <span className="email footer-content">jsj2505@gmail.com</span>
                 <a href="https://github.com/lofi-J" rel="noreferrer" target={"_blank"}><span className="email footer-content">github.com/lofi-J</span></a>
             </div>
-            <div>
+            <div className="footer-reference">
                 <span className="footer-title">Reference</span>
                 
                 <a href="https://en.wikipedia.org/wiki/Sorting_algorithm" rel="noreferrer" target={"_blank"}><span className="footer-content">Wikipedia</span></a>                

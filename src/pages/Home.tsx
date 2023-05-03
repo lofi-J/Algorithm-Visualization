@@ -11,9 +11,7 @@ import useClickSound from "../scripts/useClickSound";
 import Footer from "../components/Footer";
 
 
-
 const StyledHome = styled.main`
-    
     .flex-container {
         display: flex; 
         flex-direction: column;
@@ -29,12 +27,28 @@ const StyledHome = styled.main`
             margin: 2.5rem 0;
         }
     }
+    @media screen and (max-width: 845px) {
+        .flex-container {
+            
+            
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        .flex-container {
+            padding: 0 auto;
+            .card-container {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 0;
+            }
+            .level3 {
+                margin-bottom: 0;
+            }
+        }
+    }
 `
-/*
-현재 isOpen, setIsOpen State를 통해 modal창의 render여부를 결정하고 조작하고 있음
-또한 각 Card 컴포넌트는 algorithms State를 이용해 component위치에 맞는 정보를 Card컴포넌트가 제공이 가능하도록 되어있음.
-onClick 함수를 콜백함수형태로 Card컴포넌트에 넘겨줌.
-*/
+
 const Home = () => {
     const location = useLocation();
     // currentSort atom 
@@ -47,6 +61,7 @@ const Home = () => {
 
     const isOpen = useRecoilValue(isModalOpen);
     const setIsOpen = useSetRecoilState(isModalOpen);
+
     
     const [click] = useClickSound();
     

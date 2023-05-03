@@ -14,15 +14,6 @@ const StyledCard = styled.article`
     padding: 0px 38px;
     margin-bottom: 3.5rem;
     
-    @media screen and (max-width: 1100px) {
-        .pre-sort {
-            display: none;
-        }
-        canvas {
-            width: 100px;
-            height: 75px;
-        }
-    }
     h3 {
         display: inline-block;
         margin-bottom: 1rem;
@@ -50,7 +41,40 @@ const StyledCard = styled.article`
             }
         }
     }
+
+    @media screen and (max-width: 1024px) {
+        h3 {
+            font-size: 1.2rem;
+        }
+    }
+
+    @media screen and (max-width: 845px) {
+        h3 {
+            font-size: 1rem;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        
+        .contents-container {
+            
+            h3 {
+                display: inline-block;
+                
+                font-size: 16px;
+            }
+            .sort-name {
+                
+            }
+            .pre-sort {
+            }
+            canvas {
+                /* display: none; */
+            }
+        }
+    }
 `
+
 interface CardProp {
     onClick: () => void;
     data: {
@@ -116,12 +140,12 @@ const Card = (props: CardProp) => {
     setTimeout(() => {
         draw(contextRef.current, array, isDarkMode);
     }, 50)
-
+    
     return(
         <StyledCard>
             <div className="contents-container" onClick={props.onClick} onMouseEnter={onMouseEnter} >
                 <h3>
-                    <span>{props.data.name.toUpperCase()}</span><pre className="pre-sort">  SORT</pre>
+                    <span className="sort-name">{props.data.name.toUpperCase()}</span><pre className="pre-sort">  SORT</pre>
                 </h3>
                 <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} ></canvas>
             </div>

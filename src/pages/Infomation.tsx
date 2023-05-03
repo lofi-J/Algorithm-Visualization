@@ -23,7 +23,7 @@ const StyledInfomation = styled.div`
             font-size: 18px;
         }
         li:nth-child(1) {
-            margin-bottom: .5rem;
+            margin-bottom: 1rem;
         }
 
         p {
@@ -53,6 +53,24 @@ const StyledInfomation = styled.div`
             background-color: ${props => props.theme.color};
         }
     }
+
+    @media screen and (max-width: 480px) {
+        padding: 0 20px;
+        margin-top: 3rem;
+        div {
+            h1 {
+                font-size: 20px;
+            }
+            li {
+                font-size: 16px;
+            }
+            li:nth-child(1) {
+                margin-bottom: 1rem;
+            }
+            p { font-size: 14px; }
+            p > span { display: none; }
+        }
+    }
 `
 
 
@@ -67,10 +85,10 @@ const Infomation = () => {
                     <h1>Project introduction</h1>
                     <ul>
                         <li>
-                            <p>- Visualize the process of sorting algorithms and listen to the sound of the algorithms</p>    
+                            <p><span>-</span> Visualize the process of sorting algorithms and listen to the sound of the algorithms</p>    
                         </li>
                         <li>
-                            <p>- Visuals were created using the HTML Canvas API, and sorted sound was produced using the Web Audio API.</p>
+                            <p><span>-</span> Visuals were created using the HTML Canvas API, and sorted sound was produced using the Web Audio API.</p>
                         </li>
                     </ul>
                 </div>
@@ -78,8 +96,8 @@ const Infomation = () => {
                 <div>
                     <h1>Tech stack used</h1>
                     <ul>
-                        <li>TypeScript</li>
-                        <li>React</li>
+                        <li> - TypeScript</li>
+                        <li> - React</li>
                     </ul>
                 </div>
 

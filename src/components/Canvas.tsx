@@ -514,10 +514,8 @@ const StyledCanvasContainer = styled.div`
         height: 350px;
     }
 `
+
 const StyledSlider = styled.div`
-    @media (max-width: 1100px) {
-        display: none;
-    }
     div {
         margin-bottom: .5rem;
     }

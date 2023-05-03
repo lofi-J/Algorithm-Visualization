@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import Visualization from "./Visualization";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { isModalOpen } from "../state-management/atom";
+import ScreenOrientationAlert from "./ScreenOrientationAlert";
 
 const ModalContainer = styled.div`
     position: fixed;
@@ -44,15 +45,29 @@ const Backdrop = styled.div`
 
 
 const Modal = () => {
+    //모바일 환경에서 사용자의 portrait, landscape 처리
+    let isLandscape_ = window.innerWidth > window.innerHeight;
+    const [isLandscape, setIsLandscape] = useState(isLandscape_);
+
     // 모달 창이 나타나면 화면을 위로 스크롤함 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        function handleOrientationChange() {
+            setIsLandscape(window.matchMedia("(orientation: landscape)").matches);
+        }
+        window.addEventListener('resize', handleOrientationChange);
+        
+        return () => {
+            window.removeEventListener('resize', handleOrientationChange);
+        };
     }, [])
     const setIsOpen = useSetRecoilState(isModalOpen);
     return (
         <ModalContainer>
             <DialogBox>
-                <Visualization />
+                {
+                    isLandscape ? <Visualization /> : <ScreenOrientationAlert />
+                }
             </DialogBox>
             <Backdrop
                 onClick={(e: React.MouseEvent) => {
