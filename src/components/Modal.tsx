@@ -32,6 +32,12 @@ const DialogBox = styled.dialog`
     background-color: ${props => props.theme.bgColor};
     z-index: 10000;
     overflow-y: auto;
+    
+
+    //FIXME mobile position is break 
+    @media screen and (max-width: 850px) {
+        padding: 0;    
+    }
 `;
 
 const Backdrop = styled.div`

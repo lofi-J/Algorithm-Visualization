@@ -43,11 +43,18 @@ const StyledContentContainer = styled.div`
         font-size: 30px;
         margin-bottom: 1.5rem;
     }
+
+    @media screen and (max-width: 850px) {
+        p {
+            font-size: .8rem;
+        }
+        .title {
+            font-size: 1.3rem;
+        }
+    }
 `
 const StyledTable = styled.div`
     text-align: left;
-    /* padding-left: 1rem; */
-    /* background-color: tomato; */
     table {
         th, td {
             border: 1.5px solid;
@@ -65,6 +72,14 @@ const StyledTable = styled.div`
         }
         .space {
             border-bottom: none;
+        }
+
+        @media screen and (max-width: 860px) {
+            .time-complexity-table {
+                table {
+                    scale: .8;
+                }
+            }
         }
     }
 `

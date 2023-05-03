@@ -431,7 +431,7 @@ const Canvas = () => {
             <div className="header-container">
                 <div className="title-and-delay">
                     <div className="sort-name">{algorithms[index].name.toUpperCase()} SORT</div> {/* 정렬알고리즘 이름  */}
-                    <span>10ms delay</span>
+                    <span className="sort-delay">10ms delay</span>
                 </div>
                 <div className="control-and-close">
 
@@ -484,7 +484,7 @@ const StyledCanvasContainer = styled.div`
             .sort-name {
                 margin-right: 1rem;
             }
-            span {
+            .sort-delay {
                 font-size: small;
                 line-height: 2.5;
             }
@@ -513,6 +513,36 @@ const StyledCanvasContainer = styled.div`
         width: 100%;
         height: 350px;
     }
+
+    @media screen and (max-width: 850px) {
+        .header-container {
+            .title-and-delay {
+                .sort-name {
+                    font-size: 1rem;
+                }   
+                .sort-delay {
+                    font-size: xx-small;
+                    line-height: 2.3;
+                }
+            }
+
+            .control-and-close {
+                position: absolute;
+                top: 3%;
+                right: -20px;
+                scale: .7;
+            }
+        }
+
+        .func-container {
+            .play, .shuffle {
+                scale: .7;
+            }
+        }
+        canvas {
+            height: 200px;
+        }
+    }
 `
 
 const StyledSlider = styled.div`
@@ -524,5 +554,11 @@ const StyledSlider = styled.div`
         height: 10px;
         border-radius: 8px;
         accent-color: ${props => props.theme.color};
+    }
+
+    @media screen and (max-width: 850px) {
+        div {
+            margin-bottom: .3rem;
+        }
     }
 `
