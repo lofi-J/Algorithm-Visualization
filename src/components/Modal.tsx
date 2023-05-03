@@ -57,7 +57,7 @@ const Modal = () => {
 
     // 모달 창이 나타나면 화면을 위로 스크롤함 
     useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 100, behavior: 'smooth' });
         function handleOrientationChange() {
             setIsLandscape(window.matchMedia("(orientation: landscape)").matches);
         }
