@@ -24,3 +24,5 @@ Visualizations of Basic Sorting Algorithms using HTML Canvas
   <img src="https://user-images.githubusercontent.com/75423821/235870199-184a9810-1cf0-4352-afb7-15e057d2941b.png">
 </p>
 
+## URL 
+[Sorting Algorithms](https://main--sort-algorithms-visualization.netlify.app/)

@@ -90,11 +90,11 @@ function App() {
   const isModalOpen_ = useRecoilValue(isModalOpen);
   return (
     <>
-        <ThemeProvider theme={isDarkTheme ? darkMode : lightMode}>
-          <GlobalStyle />
-          {isModalOpen_ ? null : <Background />}
-          <RouterProvider router={router} />
-        </ThemeProvider>
+      <ThemeProvider theme={isDarkTheme ? darkMode : lightMode}>
+        <GlobalStyle />
+        {isModalOpen_ ? null : <Background />}
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </>
   );                
 }
